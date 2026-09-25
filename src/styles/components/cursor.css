@@ -1,0 +1,58 @@
+/* ============================================================
+   Cursor seguidor (só com ponteiro fino)
+   ============================================================ */
+
+/* Esconde o ponteiro padrão do sistema quando o seguidor está ativo */
+html.has-follower,
+html.has-follower *,
+html.has-follower a,
+html.has-follower button,
+html.has-follower input,
+html.has-follower select,
+html.has-follower textarea {
+  cursor: none !important;
+}
+
+html.has-follower :focus-visible {
+  outline: 2px solid var(--brass-deep);
+  outline-offset: 3px;
+}
+
+.cursor-ring,
+.cursor-dot {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: var(--z-cursor);
+  border-radius: 50%;
+  pointer-events: none !important; /* Importante para não bloquear cliques */
+  opacity: 0;
+  will-change: transform;
+}
+
+.cursor-ring {
+  width: 30px;
+  height: 30px;
+  border: 1px solid var(--brass);
+  background: rgba(154, 123, 79, 0.06);
+  transition: background-color 0.3s ease, border-color 0.3s ease;
+}
+
+.cursor-ring.is-grown {
+  background: var(--brass-tint-strong);
+  border-color: var(--brass-deep);
+}
+
+.cursor-dot {
+  width: 6px;
+  height: 6px;
+  background: var(--ink);
+}
+
+/* Desativa em dispositivos móveis/touch */
+@media (hover: none), (pointer: coarse) {
+  .cursor-ring,
+  .cursor-dot {
+    display: none !important;
+  }
+}

@@ -1,0 +1,31 @@
+/* ============================================================
+   Estado inicial das revelações
+
+   Quem anima é o GSAP; aqui fica só de onde cada coisa parte.
+   ============================================================ */
+
+/*
+ * Nos dois modos o elemento começa invisível — quem pede menos movimento
+ * ainda vê a seção aparecer, só não vê nada deslizar. O `.js` garante que,
+ * sem JavaScript, tudo nasce visível.
+ */
+/*
+ * Só o que está abaixo da dobra nasce escondido. A primeira tela NÃO depende
+ * do JS para aparecer: quem anima o hero é um fromTo, que define o estado
+ * inicial na hora. Se o GSAP falhar, o pior caso é não ter animação — nunca
+ * uma tela em branco.
+ */
+.js [data-reveal] {
+  opacity: 0;
+}
+.js:not(.reduce-motion) [data-reveal] {
+  transform: translate3d(0, 26px, 0);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  /* Nada se desloca: a entrada é só de opacidade, feita pelo GSAP. */
+  [data-reveal],
+  [data-hero] {
+    transform: none !important;
+  }
+}

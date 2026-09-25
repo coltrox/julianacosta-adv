@@ -1,0 +1,160 @@
+/* ============================================================
+   Sobrescritas por largura de tela
+
+   Fica por último de propósito: é a camada que corrige o que as
+   folhas de componente definem para telas grandes.
+   ============================================================ */
+
+@media (max-width: 1080px) {
+  .hero-inner {
+    grid-template-columns: 1fr;
+    gap: 44px;
+  }
+  .hero-portrait {
+    max-width: 380px;
+    margin-bottom: 0;
+  }
+
+  .editorial,
+  .faq,
+  .contact-grid {
+    grid-template-columns: 1fr;
+    gap: 32px;
+  }
+  .editorial-aside,
+  .faq-head {
+    position: static;
+  }
+}
+
+@media (max-width: 900px) {
+  .nav-desktop {
+    display: none;
+  }
+  .nav-toggle {
+    display: grid;
+  }
+  .header-actions {
+    margin-left: auto;
+  }
+
+  .area-list {
+    grid-template-columns: 1fr;
+  }
+  .area,
+  .area:nth-child(odd),
+  .area:nth-child(even) {
+    padding: 30px 0;
+    border-right: none;
+  }
+
+  .quote-wall,
+  .pillars {
+    grid-template-columns: 1fr;
+  }
+
+  .footer-top {
+    grid-template-columns: 1fr 1fr;
+  }
+  .footer-brand {
+    grid-column: 1 / -1;
+  }
+}
+
+@media (max-width: 640px) {
+  :root {
+    --gutter: 20px;
+  }
+
+  body {
+    font-size: 16px;
+  }
+
+  .header-cta {
+    display: none;
+  }
+
+  .hero {
+    padding-top: 114px;
+  }
+  .hero-portrait {
+    max-width: none;
+    padding-right: 8px;
+    padding-bottom: 8px;
+  }
+  .portrait-frame {
+    aspect-ratio: 4 / 5;
+  }
+  .hero-portrait::before {
+    inset: 8px 0 0 8px;
+  }
+  .hero-cta {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  .hero-cta .btn {
+    width: 100%;
+  }
+  .hero-facts {
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .edu-list li {
+    grid-template-columns: auto 1fr;
+    row-gap: 6px;
+  }
+  .edu-when {
+    grid-column: 2;
+    font-size: 0.6875rem;
+  }
+
+  .quote {
+    padding-left: 0;
+  }
+  .quote-mark {
+    display: none;
+  }
+
+  .faq-q {
+    font-size: 1rem;
+  }
+  .faq-panel p {
+    padding-right: 8px;
+  }
+
+  .pillar {
+    padding: 26px 22px;
+  }
+
+  .sent {
+    padding: 22px;
+  }
+
+  .footer-top {
+    grid-template-columns: 1fr;
+  }
+
+  .wa-float {
+    right: 16px;
+    bottom: calc(16px + env(safe-area-inset-bottom));
+    padding: 15px;
+    border-radius: 50%;
+  }
+  .wa-label {
+    display: none;
+  }
+}
+
+@media (max-width: 380px) {
+  .brand-name small {
+    display: none;
+  }
+}
+
+@media (min-width: 1081px) {
+  .hero-inner {
+    align-items: center;
+    min-height: min(78vh, 760px);
+  }
+}

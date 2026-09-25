@@ -1,0 +1,40 @@
+/* ============================================================
+   Juliana Costa — Advocacia · folha de estilo raiz
+   ------------------------------------------------------------
+   A ordem destes imports É a cascata. Mexer nela muda o site:
+
+   1. base/        tokens, reset e elementos — nada de componente;
+   2. components/  uma folha por componente, na ordem em que
+                   aparecem na página;
+   3. responsive   sobrescritas por largura de tela, por último
+                   para vencer as folhas de componente sem
+                   precisar de !important.
+   ============================================================ */
+
+/* --- 1. base --- */
+@import "./base/tokens.css";
+@import "./base/reset.css";
+@import "./base/elements.css";
+@import "./base/utilities.css";
+@import "./base/reveal-state.css";
+
+/* --- 2. componentes, na ordem da página --- */
+@import "./components/overlays.css";
+@import "./components/cursor.css";
+@import "./components/button.css";
+@import "./components/header.css";
+@import "./components/hero.css";
+@import "./components/marquee.css";
+@import "./components/section.css";
+@import "./components/profile.css";
+@import "./components/areas.css";
+@import "./components/method.css";
+@import "./components/testimonials.css";
+@import "./components/faq.css";
+@import "./components/contact.css";
+@import "./components/footer.css";
+@import "./components/whatsapp-float.css";
+
+/* --- 3. sobrescritas finais --- */
+@import "./responsive.css";
+@import "./scrollbar.css";

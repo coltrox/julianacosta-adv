@@ -1,0 +1,77 @@
+/* ============================================================
+   Perfil — formação e links sociais
+   ============================================================ */
+
+.edu-list {
+  margin: 38px 0 32px;
+  border-top: 1px solid var(--line);
+}
+.edu-list li {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: center;
+  gap: 16px;
+  padding: 18px 2px;
+  border-bottom: 1px solid var(--line);
+}
+
+.edu-icon {
+  display: grid;
+  place-items: center;
+  width: 34px;
+  height: 34px;
+  color: var(--brass-deep);
+  border: 1px solid var(--line);
+  border-radius: var(--r-xs);
+}
+
+.edu-text {
+  display: flex;
+  flex-direction: column;
+  line-height: 1.4;
+}
+.edu-text strong {
+  font-size: 0.9375rem;
+  font-weight: 500;
+  color: var(--ink);
+}
+.edu-text > span {
+  font-size: 0.875rem;
+  color: var(--muted);
+}
+
+.edu-when {
+  font-size: 0.75rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--faint);
+  white-space: nowrap;
+}
+
+.text-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding-bottom: 3px;
+  font-size: 0.9375rem;
+  font-weight: 500;
+  color: var(--brass-deep);
+  border-bottom: 1px solid var(--brass-tint-strong);
+  transition: border-color 0.25s ease, color 0.25s ease;
+}
+.text-link svg:last-child {
+  transition: transform 0.25s ease;
+}
+.text-link:hover {
+  color: var(--ink);
+  border-bottom-color: var(--ink);
+}
+.text-link:hover svg:last-child {
+  transform: translateX(4px);
+}
+
+.profile-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 14px 28px;
+}

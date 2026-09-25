@@ -1,0 +1,185 @@
+/* ============================================================
+   Header e menu do celular
+   ============================================================ */
+
+.site-header {
+  position: fixed;
+  top: 0;
+  right: 0;
+  left: 0;
+  z-index: var(--z-header);
+  border-bottom: 1px solid transparent;
+  transition: background-color 0.35s ease, border-color 0.35s ease;
+}
+
+.site-header.is-stuck,
+.site-header.is-open {
+  background: rgba(245, 241, 234, 0.86);
+  backdrop-filter: blur(14px) saturate(1.1);
+  border-bottom-color: var(--line);
+}
+
+.header-inner {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  min-height: 74px;
+}
+
+.brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 11px;
+  flex-shrink: 0;
+}
+
+.brand-mark {
+  display: grid;
+  place-items: center;
+  width: 38px;
+  height: 38px;
+  border: 1px solid var(--line);
+  border-radius: var(--r-xs);
+  color: var(--brass-deep);
+  background: var(--surface);
+  transition: border-color 0.25s ease, color 0.25s ease;
+}
+.brand:hover .brand-mark {
+  border-color: var(--brass);
+  color: var(--brass);
+}
+
+.brand-name {
+  display: flex;
+  flex-direction: column;
+  line-height: 1.1;
+}
+.brand-name strong {
+  font-family: var(--font-display);
+  font-size: 1.25rem;
+  font-weight: 400;
+  letter-spacing: -0.015em;
+  color: var(--ink);
+}
+.brand-name small {
+  font-size: 0.6875rem;
+  font-weight: 500;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--faint);
+}
+
+.nav-desktop {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  margin-left: auto;
+}
+
+.nav-desktop a {
+  position: relative;
+  padding: 9px 14px;
+  font-size: 0.9375rem;
+  color: var(--body);
+  border-radius: var(--r-xs);
+  transition: color 0.2s ease;
+}
+.nav-desktop a::after {
+  content: "";
+  position: absolute;
+  bottom: 2px;
+  left: 14px;
+  width: calc(100% - 28px);
+  height: 1px;
+  background: var(--brass);
+  transform: scaleX(0);
+  transform-origin: 0 50%;
+  transition: transform 0.3s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.nav-desktop a:hover {
+  color: var(--ink);
+}
+.nav-desktop a:hover::after,
+.nav-desktop a.is-active::after {
+  transform: scaleX(1);
+}
+.nav-desktop a.is-active {
+  color: var(--ink);
+}
+
+.header-actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-left: 6px;
+}
+
+.nav-toggle {
+  display: none;
+  place-items: center;
+  width: 42px;
+  height: 42px;
+  color: var(--ink);
+  border: 1px solid var(--line);
+  border-radius: var(--r-xs);
+  transition: border-color 0.2s ease, background-color 0.2s ease;
+}
+.nav-toggle:hover {
+  border-color: var(--ink);
+}
+
+/* ---------------------------- menu do celular --------------------------- */
+
+.menu-mobile {
+  position: fixed;
+  inset: 74px 0 0;
+  z-index: var(--z-menu);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 18px var(--gutter) calc(28px + env(safe-area-inset-bottom));
+  background: var(--bone);
+  overflow-y: auto;
+  overscroll-behavior: contain;
+}
+.menu-mobile[hidden] {
+  display: none;
+}
+
+.menu-mobile nav {
+  display: flex;
+  flex-direction: column;
+}
+
+.menu-mobile nav a {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 20px 2px;
+  font-family: var(--font-display);
+  font-size: 1.75rem;
+  letter-spacing: -0.02em;
+  color: var(--ink);
+  border-bottom: 1px solid var(--line-soft);
+}
+.menu-mobile nav a svg {
+  color: var(--brass);
+}
+
+.menu-mobile-foot {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px 22px;
+  padding-top: 26px;
+  font-size: 0.9375rem;
+}
+.menu-mobile-foot a {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--body);
+}
+.menu-mobile-foot a:hover {
+  color: var(--brass-deep);
+}

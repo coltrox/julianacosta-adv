@@ -1,0 +1,77 @@
+/* ============================================================
+   Estrutura de seção — cabeçalho, kicker e texto corrido
+   ============================================================ */
+
+.section {
+  padding: var(--section-y) 0;
+}
+
+.section-alt {
+  background: var(--bone-deep);
+}
+
+.section-dark {
+  background: var(--espresso);
+  color: var(--on-dark-muted);
+}
+.section-dark h2,
+.section-dark h3 {
+  color: var(--on-dark);
+}
+.section-dark .kicker {
+  color: var(--brass-light);
+}
+
+.kicker {
+  display: block;
+  margin-bottom: 18px;
+  font-size: 0.75rem;
+  font-weight: 500;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--brass-deep);
+}
+
+.section-head {
+  max-width: 660px;
+  margin-bottom: clamp(44px, 5vw, 72px);
+}
+.section-head p {
+  margin-top: 20px;
+  font-size: 1.0625rem;
+  color: var(--muted);
+  max-width: 56ch;
+}
+
+.lead {
+  font-size: clamp(1.0625rem, 1.5vw, 1.1875rem);
+  color: var(--ink-soft);
+}
+.section-dark .lead {
+  color: var(--on-dark);
+}
+
+.editorial {
+  display: grid;
+  grid-template-columns: 0.82fr 1.18fr;
+  gap: clamp(36px, 5vw, 88px);
+  align-items: start;
+}
+
+.editorial-aside {
+  position: sticky;
+  top: 116px;
+}
+.editorial-aside h2 em {
+  color: var(--brass-deep);
+}
+.section-dark .editorial-aside h2 em {
+  color: var(--brass-light);
+}
+
+.editorial-body > p {
+  max-width: 62ch;
+}
+.editorial-body > p + p {
+  margin-top: 18px;
+}

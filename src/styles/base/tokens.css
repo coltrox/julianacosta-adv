@@ -1,0 +1,70 @@
+/* ============================================================
+   Tokens de design — paleta, raios, sombras, tipografia e ritmo
+
+   Paleta: papel osso (quente) + tinta espresso + latão fosco.
+   Uma só família de neutros (quentes) e um só acento.
+   ============================================================ */
+
+:root {
+  /* --- superfícies claras --- */
+  --bone: #f5f1ea;
+  --bone-deep: #eee8dd;
+  --surface: #fbf9f5;
+
+  /* --- tinta e texto --- */
+  --ink: #1b1a17;
+  --ink-soft: #3b3831;
+  --body: #5c574e;
+  --muted: #6f6a60;
+  --faint: #918a7e;
+
+  /* --- linhas --- */
+  --line: #e2dace;
+  --line-soft: #ebe4d9;
+
+  /* --- acento único: latão fosco --- */
+  --brass: #9a7b4f;
+  --brass-deep: #7a5f3a;
+  --brass-light: #b99a6b;
+  --brass-tint: rgba(154, 123, 79, 0.1);
+  --brass-tint-strong: rgba(154, 123, 79, 0.18);
+
+  /* --- superfícies escuras --- */
+  --espresso: #211f1b;
+  --espresso-soft: #2b2822;
+  --on-dark: #efeae0;
+  --on-dark-muted: #a8a197;
+
+  /* --- semântico --- */
+  --success: #4f6f4a;
+  --success-bg: #eef2ea;
+  --danger: #9c4a3c;
+
+  /* --- raios: variados, apertados por dentro --- */
+  --r-xs: 2px;
+  --r-sm: 4px;
+  --r-md: 8px;
+  --r-lg: 16px;
+  --r-pill: 999px;
+
+  /* --- sombras tingidas de quente, luz vinda de cima --- */
+  --shadow-sm: 0 2px 8px -4px rgba(33, 31, 27, 0.16);
+  --shadow-md: 0 16px 40px -20px rgba(33, 31, 27, 0.22);
+  --shadow-lg: 0 32px 70px -30px rgba(33, 31, 27, 0.3);
+
+  /* --- tipografia --- */
+  --font-display: "Instrument Serif", "Iowan Old Style", Georgia, "Times New Roman", serif;
+  --font-sans: "Geist", ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+
+  /* --- ritmo --- */
+  --gutter: 26px;
+  --max: 1240px;
+  --section-y: clamp(72px, 9vw, 132px);
+
+  /* --- camadas --- */
+  --z-grain: 5;
+  --z-header: 40;
+  --z-menu: 45;
+  --z-float: 50;
+  --z-cursor: 90;
+}

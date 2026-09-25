@@ -1,0 +1,32 @@
+/* ============================================================
+   Botão flutuante do WhatsApp
+   ============================================================ */
+
+.wa-float {
+  position: fixed;
+  right: 22px;
+  bottom: calc(22px + env(safe-area-inset-bottom));
+  z-index: var(--z-float);
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 14px 18px;
+  color: var(--bone);
+  background: var(--espresso);
+  border: 1px solid rgba(185, 154, 107, 0.5);
+  border-radius: var(--r-pill);
+  box-shadow: var(--shadow-md);
+  transition: transform 0.25s ease, background-color 0.25s ease;
+}
+.wa-float:hover {
+  transform: translateY(-3px);
+  background: var(--brass-deep);
+}
+.wa-float:active {
+  transform: translateY(0) scale(0.98);
+}
+
+.wa-label {
+  font-size: 0.9375rem;
+  font-weight: 500;
+}

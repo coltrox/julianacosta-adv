@@ -1,0 +1,150 @@
+/* ============================================================
+   Hero e retrato
+   ============================================================ */
+
+.hero {
+  position: relative;
+  padding: calc(74px + clamp(48px, 9vw, 104px)) 0 clamp(56px, 8vw, 104px);
+  overflow: hidden;
+}
+
+.hero::before {
+  content: "";
+  position: absolute;
+  top: -20%;
+  right: -10%;
+  width: 70vw;
+  height: 70vw;
+  max-width: 900px;
+  max-height: 900px;
+  background: radial-gradient(
+    circle at 50% 50%,
+    rgba(154, 123, 79, 0.11),
+    rgba(154, 123, 79, 0) 62%
+  );
+  pointer-events: none;
+}
+
+.hero-inner {
+  position: relative;
+  display: grid;
+  grid-template-columns: 1.32fr 0.68fr;
+  gap: clamp(36px, 5vw, 76px);
+  align-items: center;
+}
+
+.hero-kicker {
+  margin-bottom: 26px;
+}
+
+.hero-title {
+  margin-bottom: 30px;
+}
+
+.mask {
+  display: inline-block;
+  overflow: hidden;
+  vertical-align: bottom;
+  margin-right: 0.24em;
+  padding-bottom: 0.14em;
+  margin-bottom: -0.14em;
+}
+.mask-i {
+  display: inline-block;
+}
+.mask-accent .mask-i {
+  font-style: italic;
+  color: var(--brass-deep);
+}
+
+.hero-lead {
+  font-size: clamp(1.0625rem, 1.5vw, 1.1875rem);
+  color: var(--muted);
+  margin-bottom: 34px;
+}
+
+.hero-cta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-bottom: 40px;
+}
+
+.hero-facts {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px 30px;
+  padding-top: 26px;
+  border-top: 1px solid var(--line);
+}
+.hero-facts li {
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  font-size: 0.875rem;
+  color: var(--muted);
+}
+.hero-facts svg {
+  color: var(--brass);
+  flex-shrink: 0;
+}
+
+/* ------------------------------- retrato -------------------------------- */
+
+.hero-portrait {
+  position: relative;
+  margin-bottom: 0;
+  padding-right: 12px;
+  padding-bottom: 12px;
+  z-index: 1; 
+}
+
+.portrait-frame {
+  position: relative;
+  overflow: hidden;
+  border-radius: var(--r-xs);
+  aspect-ratio: 3 / 4;
+  background: var(--espresso);
+  box-shadow: var(--shadow-lg);
+  z-index: 2; 
+}
+.portrait-frame img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center 22%;
+  will-change: transform;
+}
+
+.hero-portrait::before {
+  content: "";
+  position: absolute;
+  inset: 12px 0 0 12px;
+  border: 1px solid var(--brass);
+  border-radius: var(--r-xs);
+  opacity: 0.5;
+  pointer-events: none;
+  z-index: 0; 
+}
+
+.hero-portrait figcaption {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end; /* Alinha os itens para a direita */
+  text-align: right;     /* Garante o alinhamento à direita do texto */
+  gap: 4px;
+  padding-top: 16px;
+}
+.hero-portrait figcaption strong {
+  font-family: var(--font-display);
+  font-size: 1.0625rem;
+  font-weight: 400;
+  color: var(--ink);
+}
+.hero-portrait figcaption span {
+  font-size: 0.75rem;
+  font-weight: 500;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--faint);
+}

@@ -1,0 +1,49 @@
+/* ============================================================
+   Método
+   ============================================================ */
+
+.tool-list {
+  display: grid;
+  margin: 32px 0 46px;
+}
+.tool-list li {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 15px 0;
+  font-size: 0.9375rem;
+  color: var(--on-dark);
+  border-bottom: 1px solid rgba(239, 234, 224, 0.1);
+}
+.tool-list svg {
+  color: var(--brass-light);
+  flex-shrink: 0;
+}
+
+.pillars {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1px;
+  background: rgba(239, 234, 224, 0.12);
+}
+
+.pillar {
+  padding: 32px 28px;
+  background: var(--espresso);
+  transition: background-color 0.3s ease;
+}
+.pillar:hover {
+  background: var(--espresso-soft);
+}
+.pillar svg {
+  color: var(--brass-light);
+  margin-bottom: 18px;
+}
+.pillar h3 {
+  margin-bottom: 10px;
+  font-size: 1.375rem;
+}
+.pillar p {
+  font-size: 0.9375rem;
+  color: var(--on-dark-muted);
+}
