@@ -1,5 +1,5 @@
 /* ============================================================
-   Letreiro — loop contínuo, reativo ao scroll e arrastável
+   Letreiro — loop contínuo, preso ao scroll e arrastável
    ------------------------------------------------------------
    Como funciona
 
@@ -9,21 +9,32 @@
 
    - a emenda nunca aparece, porque não existe "fim" do tween
      para reiniciar;
-   - a velocidade pode mudar (ou inverter) no meio do caminho sem
-     tranco, porque o que muda é px/s e não a direção de um tween;
+   - o sentido pode inverter no meio do caminho sem tranco,
+     porque o que muda é px/s e não a direção de um tween;
    - o dedo pode assumir o controle e devolver, porque o
      deslocamento é um número que qualquer um pode empurrar.
 
    Três forças mexem nesse número:
 
-   1. repouso  — velocidade constante para a esquerda, na mesma
+   1. deriva   — velocidade constante para a esquerda, na mesma
                  cadência do letreiro antigo (CYCLE_SECONDS);
-   2. scroll   — descer acelera, subir inverte o sentido; o
-                 empurrão decai sozinho e o letreiro volta ao
-                 repouso em curva, não em degrau;
-   3. arrasto  — enquanto o ponteiro está pressionado ele é a
-                 única fonte de movimento; ao soltar, a velocidade
-                 do gesto vira inércia e decai até o repouso.
+   2. scroll   — acoplamento de POSIÇÃO, não de velocidade: cada
+                 pixel rolado desloca o letreiro na mesma hora,
+                 SCROLL_COUPLING px por px. Descer soma para a
+                 esquerda, subir subtrai e o letreiro anda para
+                 trás. Como está preso à posição e não a uma
+                 estimativa de velocidade, o efeito é imediato,
+                 proporcional ao gesto e impossível de não ver;
+   3. arrasto  — enquanto o gesto é reconhecido como horizontal,
+                 o ponteiro é a única fonte de movimento; ao
+                 soltar, a velocidade do gesto vira inércia e
+                 decai até a deriva.
+
+   O gesto do dedo é ambíguo no começo: ninguém consegue arrastar
+   o letreiro em linha reta, e a faixa fica no meio do caminho de
+   quem só quer rolar a página. Por isso o arrasto só é assumido
+   depois de DIRECTION_LOCK pixels na horizontal — antes disso o
+   letreiro segue rodando e o scroll vertical passa intacto.
 
    O número de conjuntos necessário é medido em tempo de execução:
    com poucos conjuntos, uma tela larga abre um vão na direita no
@@ -38,26 +49,21 @@ import { prefersReducedMotion } from "./environment.js";
    interfere. É o ritmo de leitura em repouso — e o do letreiro original. */
 const CYCLE_SECONDS = 34;
 
-/* Quanto da velocidade do scroll (px/s) vira velocidade de letreiro.
-   Calibrado no gesto real: um clique de roda produz ~670px/s de scroll e
-   precisa ser suficiente para inverter o letreiro, não só freá-lo. */
-const SCROLL_GAIN = 0.26;
+/* Pixels de letreiro por pixel de scroll. Um swipe de 300px desloca o
+   letreiro ~135px: mais de meia palavra, então a ligação com o gesto é
+   imediata e óbvia. */
+const SCROLL_COUPLING = 0.45;
 
-/* Teto do empurrão do scroll, em múltiplos da velocidade de repouso. */
-const MAX_SCROLL_BOOST = 9;
+/* Meia-vida da volta à deriva depois de um arremesso. */
+const SPEED_HALF_LIFE = 0.28;
 
-/* Teto da inércia ao soltar, em múltiplos da velocidade de repouso. */
+/* Quantos pixels na horizontal o gesto precisa andar antes de o letreiro
+   assumir que é um arrasto. Abaixo disso o gesto ainda pode ser um scroll
+   vertical, e quem manda é a página. */
+const DIRECTION_LOCK = 8;
+
+/* Teto da inércia ao soltar, em múltiplos da velocidade de deriva. */
 const MAX_FLICK_BOOST = 16;
-
-/* Meia-vida do empurrão do scroll: parou de rolar e em ~0,3s o letreiro
-   já está claramente voltando ao repouso. */
-const BOOST_HALF_LIFE = 0.34;
-
-/* Meia-vida da aproximação ao alvo. É o que transforma a inversão de
-   sentido em curva em vez de tranco — e precisa ser bem menor que a
-   meia-vida do empurrão, senão um gesto curto acaba antes de o letreiro
-   reagir a ele. */
-const SPEED_HALF_LIFE = 0.12;
 
 /* Segurou parado mais que isso antes de soltar? Então não foi um
    arremesso: solta sem inércia. */
@@ -90,13 +96,17 @@ export function createMarqueeLoop({ band, track, onCopiesNeeded }) {
   const setX = gsap.quickSetter(track, "x", "px");
 
   let cycle = 0; // largura de um conjunto, px — o período do loop
-  let restSpeed = 0; // px/s em repouso, sempre positivo (é magnitude)
+  let driftSpeed = 0; // px/s da deriva, com sinal
+  let restSpeed = 0; // px/s da deriva em repouso, sempre positivo
   let offset = 0; // deslocamento aplicado, mantido em (-cycle, 0]
-  let speed = 0; // px/s deste frame, com sinal
-  let boost = 0; // empurrão do scroll, px/s com sinal
+  let scrollPending = 0; // px de scroll ainda não aplicados
+  let lastScroll = null; // posição de scroll do último quadro observado
   let running = false;
 
-  let dragId = null; // pointerId do gesto em curso
+  let pointerId = null; // ponteiro em observação
+  let dragging = false; // o gesto já foi reconhecido como horizontal
+  let originX = 0; // onde o gesto começou, para o direction lock
+  let originY = 0;
   let dragPending = 0; // px arrastados ainda não aplicados
   let dragX = 0;
   let dragAt = 0;
@@ -129,9 +139,11 @@ export function createMarqueeLoop({ band, track, onCopiesNeeded }) {
     if (!cycle) return;
     const dt = Math.min(deltaMs / 1000, MAX_FRAME);
 
-    if (dragId !== null) {
-      // Ponteiro pressionado: ele é a única fonte de movimento. As posições
-      // chegam pelo pointermove e são aplicadas aqui, uma vez por frame.
+    if (dragging) {
+      // Gesto horizontal em curso: o ponteiro é a única fonte de movimento.
+      // O scroll acumulado neste intervalo é descartado de propósito, senão
+      // o letreiro andaria duas vezes.
+      scrollPending = 0;
       if (dragPending) {
         offset = wrapOffset(offset + dragPending);
         dragPending = 0;
@@ -140,14 +152,12 @@ export function createMarqueeLoop({ band, track, onCopiesNeeded }) {
       return;
     }
 
-    boost *= decay(BOOST_HALF_LIFE, dt);
+    // A deriva volta ao repouso em curva: é o que desacelera um arremesso.
+    driftSpeed +=
+      (-restSpeed - driftSpeed) * (1 - decay(SPEED_HALF_LIFE, dt));
 
-    // Repouso é sempre para a esquerda; o empurrão soma com sinal e, quando
-    // é grande o bastante, vira o sentido.
-    const target = -restSpeed + boost;
-    speed += (target - speed) * (1 - decay(SPEED_HALF_LIFE, dt));
-
-    offset = wrapOffset(offset + speed * dt);
+    offset = wrapOffset(offset + driftSpeed * dt + scrollPending);
+    scrollPending = 0;
     setX(offset);
   };
 
@@ -160,11 +170,17 @@ export function createMarqueeLoop({ band, track, onCopiesNeeded }) {
     // Fora da tela o letreiro não gasta frame nenhum.
     onToggle: (self) => (self.isActive ? start() : stop()),
     onUpdate: (self) => {
-      // getVelocity() é px/s de scroll, positivo descendo. Descer empurra
-      // para a esquerda, o mesmo sentido do repouso; subir empurra para a
-      // direita com força suficiente para inverter o letreiro.
-      const cap = restSpeed * MAX_SCROLL_BOOST;
-      boost = gsap.utils.clamp(-cap, cap, -self.getVelocity() * SCROLL_GAIN);
+      const current = self.scroll();
+      // Primeira leitura depois de entrar na tela: só estabelece a
+      // referência, senão o letreiro saltaria o scroll que aconteceu
+      // enquanto ele estava fora.
+      if (lastScroll === null) {
+        lastScroll = current;
+        return;
+      }
+      // Descer (delta positivo) empurra para a esquerda; subir inverte.
+      scrollPending -= (current - lastScroll) * SCROLL_COUPLING;
+      lastScroll = current;
     },
   });
 
@@ -173,20 +189,47 @@ export function createMarqueeLoop({ band, track, onCopiesNeeded }) {
   const onPointerDown = (ev) => {
     // Só botão principal do mouse; toque e caneta passam direto.
     if (ev.pointerType === "mouse" && ev.button !== 0) return;
-    if (dragId !== null || !cycle) return;
+    if (pointerId !== null || !cycle) return;
 
-    dragId = ev.pointerId;
-    dragX = ev.clientX;
-    dragAt = ev.timeStamp;
+    // Observa o gesto, mas não assume nada ainda: pode ser um scroll.
+    pointerId = ev.pointerId;
+    dragging = false;
+    originX = ev.clientX;
+    originY = ev.clientY;
     dragPending = 0;
     flick = 0;
-    speed = 0;
-    boost = 0;
+  };
+
+  /** Começa a arrastar de verdade, sem perder o trecho já percorrido. */
+  const beginDrag = (ev) => {
+    dragging = true;
+    dragX = ev.clientX;
+    dragAt = ev.timeStamp;
+    // Os pixels gastos reconhecendo a direção contam: sem isso o letreiro
+    // ficaria DIRECTION_LOCK px atrás do dedo pelo resto do gesto.
+    dragPending = ev.clientX - originX;
+    flick = 0;
+    driftSpeed = 0;
     band.classList.add("is-dragging");
   };
 
   const onPointerMove = (ev) => {
-    if (ev.pointerId !== dragId) return;
+    if (ev.pointerId !== pointerId) return;
+
+    if (!dragging) {
+      const dx = ev.clientX - originX;
+      const dy = ev.clientY - originY;
+
+      // Gesto que se revelou vertical: é da página, não do letreiro.
+      if (Math.abs(dy) > DIRECTION_LOCK && Math.abs(dy) >= Math.abs(dx)) {
+        pointerId = null;
+        return;
+      }
+      if (Math.abs(dx) <= DIRECTION_LOCK) return;
+
+      beginDrag(ev);
+      return;
+    }
 
     const dx = ev.clientX - dragX;
     const dt = (ev.timeStamp - dragAt) / 1000;
@@ -200,18 +243,28 @@ export function createMarqueeLoop({ band, track, onCopiesNeeded }) {
   };
 
   const onPointerUp = (ev) => {
-    if (ev.pointerId !== dragId) return;
+    if (ev.pointerId !== pointerId) return;
 
-    dragId = null;
+    const wasDragging = dragging;
+    pointerId = null;
+    dragging = false;
     band.classList.remove("is-dragging");
+
+    // Nunca virou arrasto (foi um toque, ou um scroll): nada a fazer.
+    // `pointercancel` é o navegador assumindo o gesto para rolar a página,
+    // e aí a inércia seria do gesto dele, não do letreiro.
+    if (!wasDragging || ev.type === "pointercancel") {
+      flick = 0;
+      return;
+    }
 
     // Arrastou, parou e só então soltou: não era um arremesso.
     const held = (ev.timeStamp - dragAt) / 1000 > FLICK_TIMEOUT;
     const cap = restSpeed * MAX_FLICK_BOOST;
 
-    // A velocidade do gesto entra como estado inicial e o frame a puxa de
+    // A velocidade do gesto entra como deriva inicial e o frame a puxa de
     // volta ao repouso — é isso que dá a desaceleração.
-    speed = held ? 0 : gsap.utils.clamp(-cap, cap, flick);
+    driftSpeed = held ? 0 : gsap.utils.clamp(-cap, cap, flick);
     flick = 0;
   };
 
@@ -220,6 +273,10 @@ export function createMarqueeLoop({ band, track, onCopiesNeeded }) {
   function start() {
     if (running) return;
     running = true;
+    // A referência de scroll é recolhida no primeiro onUpdate: assim o
+    // letreiro não herda o scroll que passou enquanto estava fora da tela.
+    lastScroll = null;
+    scrollPending = 0;
     gsap.ticker.add(frame);
   }
 
@@ -227,14 +284,13 @@ export function createMarqueeLoop({ band, track, onCopiesNeeded }) {
     if (!running) return;
     running = false;
     gsap.ticker.remove(frame);
-    // Voltou para a tela depois de um scroll longo: começa em repouso, não
-    // no empurrão que ficou guardado.
-    speed = -restSpeed;
-    boost = 0;
+    driftSpeed = -restSpeed;
+    lastScroll = null;
+    scrollPending = 0;
   }
 
-  // A faixa recebe o gesto; o resto escuta a janela para que o ponteiro
-  // possa sair da faixa (ou da própria janela) sem travar o arrasto.
+  // A faixa recebe o começo do gesto; o resto escuta a janela para que o
+  // ponteiro possa sair da faixa (ou da própria janela) sem travar nada.
   band.addEventListener("pointerdown", onPointerDown);
   window.addEventListener("pointermove", onPointerMove, { passive: true });
   window.addEventListener("pointerup", onPointerUp);
