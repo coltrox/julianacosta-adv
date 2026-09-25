@@ -61,8 +61,27 @@ const CYCLE_SECONDS = 34;
    imediata e óbvia. */
 const SCROLL_COUPLING = 0.45;
 
-/* Meia-vida da volta à deriva depois de um arremesso. */
+/* Meia-vida da volta à deriva depois de um arremesso, e da volta da
+   deriva quando o leitor para de subir. */
 const SPEED_HALF_LIFE = 0.28;
+
+/* Subindo, a deriva sai do caminho. As duas forças apontam para lados
+   opostos — a deriva para a esquerda, o scroll para a direita — e no fim
+   de cada gesto, quando a velocidade do scroll cai abaixo de
+   restSpeed / SCROLL_COUPLING, a deriva volta a ganhar e o letreiro
+   inverte outra vez. Esse vai-e-vem é o que se sente como travadinha.
+   Suspender a deriva deixa o movimento puramente proporcional ao gesto,
+   num sentido só.
+
+   Quanto a deriva fica suspensa depois do último quadro de scroll para
+   cima. Precisa cobrir o intervalo entre quadros de um scroll em rajadas
+   (toque, roda) para a deriva não piscar de volta no meio do gesto. */
+const UP_HOLD_SECONDS = 0.2;
+
+/* Meia-vida da saída da deriva: sai rápido, para não brigar nem por um
+   quadro. A volta usa SPEED_HALF_LIFE, mais lenta, para reaparecer sem
+   degrau. */
+const DRIFT_OUT_HALF_LIFE = 0.1;
 
 /* Quantos pixels na horizontal o gesto precisa andar antes de o letreiro
    assumir que é um arrasto. Abaixo disso o gesto ainda pode ser um scroll
@@ -104,8 +123,8 @@ export function createMarqueeLoop({ band, track, onCopiesNeeded }) {
   let driftSpeed = 0; // px/s da deriva, com sinal
   let restSpeed = 0; // px/s da deriva em repouso, sempre positivo
   let offset = 0; // deslocamento aplicado, mantido em (-cycle, 0]
-  let scrollPending = 0; // px de scroll ainda não aplicados
-  let lastScroll = null; // posição de scroll do último quadro observado
+  let lastScroll = null; // posição de scroll no quadro anterior
+  let upHold = 0; // segundos restantes de deriva suspensa
   let running = false;
 
   let pointerId = null; // ponteiro em observação
@@ -144,11 +163,15 @@ export function createMarqueeLoop({ band, track, onCopiesNeeded }) {
     if (!cycle) return;
     const dt = Math.min(deltaMs / 1000, MAX_FRAME);
 
+    // Decai antes de qualquer saída antecipada, senão um arrasto longo
+    // deixaria a suspensão pendurada para depois dele.
+    if (upHold > 0) upHold = Math.max(0, upHold - dt);
+
     if (dragging) {
       // Gesto horizontal em curso: o ponteiro é a única fonte de movimento.
-      // O scroll acumulado neste intervalo é descartado de propósito, senão
-      // o letreiro andaria duas vezes.
-      scrollPending = 0;
+      // A referência de scroll acompanha sem ser aplicada, senão o letreiro
+      // andaria duas vezes ao fim do arrasto.
+      lastScroll = trigger.scroll();
       if (dragPending) {
         offset = wrapOffset(offset + dragPending);
         dragPending = 0;
@@ -157,12 +180,28 @@ export function createMarqueeLoop({ band, track, onCopiesNeeded }) {
       return;
     }
 
-    // A deriva volta ao repouso em curva: é o que desacelera um arremesso.
-    driftSpeed +=
-      (-restSpeed - driftSpeed) * (1 - decay(SPEED_HALF_LIFE, dt));
+    // O scroll é lido aqui, e não num callback do ScrollTrigger, porque
+    // os eventos de scroll chegam em rajadas: havia quadro com delta e
+    // quadro sem, e o letreiro alternava entre "andou com o scroll" e "só
+    // a deriva". Lendo a posição uma vez por quadro, todo quadro recebe o
+    // deslocamento real do intervalo e o movimento sai contínuo.
+    const current = trigger.scroll();
+    const scrolled = lastScroll === null ? 0 : current - lastScroll;
+    lastScroll = current;
 
-    offset = wrapOffset(offset + driftSpeed * dt + scrollPending);
-    scrollPending = 0;
+    // Descer empurra para a esquerda; subir inverte.
+    if (scrolled < 0) upHold = UP_HOLD_SECONDS;
+
+    // Subindo, a deriva é suspensa e o movimento fica só por conta do
+    // scroll. Parou de subir, ela reaparece em curva.
+    const suspended = upHold > 0;
+    const target = suspended ? 0 : -restSpeed;
+    const halfLife = suspended ? DRIFT_OUT_HALF_LIFE : SPEED_HALF_LIFE;
+    driftSpeed += (target - driftSpeed) * (1 - decay(halfLife, dt));
+
+    offset = wrapOffset(
+      offset + driftSpeed * dt - scrolled * SCROLL_COUPLING
+    );
     setX(offset);
   };
 
@@ -172,21 +211,9 @@ export function createMarqueeLoop({ band, track, onCopiesNeeded }) {
     trigger: band,
     start: "top bottom",
     end: "bottom top",
-    // Fora da tela o letreiro não gasta frame nenhum.
+    // Fora da tela o letreiro não gasta frame nenhum. O gatilho serve só
+    // para isso: quem lê a posição do scroll é o quadro.
     onToggle: (self) => (self.isActive ? start() : stop()),
-    onUpdate: (self) => {
-      const current = self.scroll();
-      // Primeira leitura depois de entrar na tela: só estabelece a
-      // referência, senão o letreiro saltaria o scroll que aconteceu
-      // enquanto ele estava fora.
-      if (lastScroll === null) {
-        lastScroll = current;
-        return;
-      }
-      // Descer (delta positivo) empurra para a esquerda; subir inverte.
-      scrollPending -= (current - lastScroll) * SCROLL_COUPLING;
-      lastScroll = current;
-    },
   });
 
   /* -------------------------------- arrasto ----------------------------- */
@@ -278,10 +305,9 @@ export function createMarqueeLoop({ band, track, onCopiesNeeded }) {
   function start() {
     if (running) return;
     running = true;
-    // A referência de scroll é recolhida no primeiro onUpdate: assim o
-    // letreiro não herda o scroll que passou enquanto estava fora da tela.
+    // A referência é recolhida no primeiro quadro: assim o letreiro não
+    // herda o scroll que passou enquanto estava fora da tela.
     lastScroll = null;
-    scrollPending = 0;
     gsap.ticker.add(frame);
   }
 
@@ -290,8 +316,10 @@ export function createMarqueeLoop({ band, track, onCopiesNeeded }) {
     running = false;
     gsap.ticker.remove(frame);
     driftSpeed = -restSpeed;
+    // Zerado para o letreiro não herdar, ao voltar para a tela, o scroll
+    // que passou enquanto ele estava fora.
     lastScroll = null;
-    scrollPending = 0;
+    upHold = 0;
   }
 
   // A faixa recebe o começo do gesto; o resto escuta a janela para que o
