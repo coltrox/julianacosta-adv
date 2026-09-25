@@ -60,9 +60,7 @@
 }
 
 /* Não há caso especial para prefers-reduced-motion aqui, e isso é
-   deliberado: o layout é o mesmo nos dois modos. Quem pede menos
-   movimento recebe a faixa parada — o JS não aplica deriva nem
-   acoplamento ao scroll — mas segue podendo arrastá-la para ler o
-   resto. Recortar a fila a um conjunto centralizado, como era antes,
-   deixava esse visitante sem acesso ao conteúdo que não cabia na
-   tela. */
+   deliberado: por decisão da dona do site, o letreiro anima nos dois
+   modos (ver motion/marquee.js). Recortar a fila a um conjunto
+   centralizado, como era antes, também deixava quem usa reduced-motion
+   sem acesso ao texto que não cabia na tela. */
