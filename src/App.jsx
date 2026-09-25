@@ -48,7 +48,7 @@ const CONTACT = {
   phone: "(19) 92000-3015",
   phoneHref: "tel:+5519920003015",
   whatsapp: "https://wa.me/5519920003015",
-  email: "advogada.julianasoares@hotmail.com",
+  email: "julianacoltro@adv.oabsp.org.br",
   address:
     "Av. Francisco Glicério, 1326 — Sala 3, Ed. Tabatinga, Conceição, Campinas — SP",
   linkedin: "https://www.linkedin.com/in/juliana-soares-da-costa-298a0522/",

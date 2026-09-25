@@ -1,4 +1,4 @@
-/* App.css com correções de foto contida no container e cursor alinhado */
+/* App.css com correções da foto no contentor, cursor alinhado e barra de rolagem */
 
 .grain {
   position: fixed;
@@ -418,7 +418,7 @@ html.has-follower :focus-visible {
   margin-bottom: 0;
   padding-right: 12px;
   padding-bottom: 12px;
-  z-index: 1; /* Cria um contexto de isolamento para a seção */
+  z-index: 1; 
 }
 
 .portrait-frame {
@@ -428,7 +428,7 @@ html.has-follower :focus-visible {
   aspect-ratio: 3 / 4;
   background: var(--espresso);
   box-shadow: var(--shadow-lg);
-  z-index: 2; /* Garante que a foto fique POR CIMA da borda */
+  z-index: 2; 
 }
 .portrait-frame img {
   width: 100%;
@@ -446,7 +446,29 @@ html.has-follower :focus-visible {
   border-radius: var(--r-xs);
   opacity: 0.5;
   pointer-events: none;
-  z-index: 0; /* Coloca a borda decorativa POR TRÁS da foto */
+  z-index: 0; 
+}
+
+.hero-portrait figcaption {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end; /* Alinha os itens para a direita */
+  text-align: right;     /* Garante o alinhamento à direita do texto */
+  gap: 4px;
+  padding-top: 16px;
+}
+.hero-portrait figcaption strong {
+  font-family: var(--font-display);
+  font-size: 1.0625rem;
+  font-weight: 400;
+  color: var(--ink);
+}
+.hero-portrait figcaption span {
+  font-size: 0.75rem;
+  font-weight: 500;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--faint);
 }
 
 /* ============================== letreiro ================================= */
@@ -1361,4 +1383,35 @@ html:not(.js) .faq-panel {
     align-items: center;
     min-height: min(78vh, 760px);
   }
+}
+
+/* ============================== barra de rolagem ========================= */
+
+/* Suporte para Firefox */
+html {
+  scrollbar-width: thin;
+  scrollbar-color: var(--brass-deep) var(--bone);
+}
+
+/* Suporte para Chrome, Edge e Safari */
+::-webkit-scrollbar {
+  width: 12px;
+  height: 12px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--bone);
+  border-left: 1px solid var(--line);
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: var(--brass);
+  border-radius: 10px;
+  /* A borda com a mesma cor do track cria um efeito de "padding" interno */
+  border: 3px solid var(--bone); 
+  transition: background-color 0.2s ease;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background-color: var(--brass-deep);
 }
