@@ -59,18 +59,10 @@
   flex-shrink: 0;
 }
 
-/* Sem movimento autônomo e sem arrasto: fica um conjunto só,
-   centralizado e parado. */
-@media (prefers-reduced-motion: reduce) {
-  .marquee {
-    touch-action: auto;
-    cursor: auto;
-  }
-  .marquee-track {
-    width: 100%;
-    justify-content: center;
-  }
-  .marquee-set:nth-child(n + 2) {
-    display: none;
-  }
-}
+/* Não há caso especial para prefers-reduced-motion aqui, e isso é
+   deliberado: o layout é o mesmo nos dois modos. Quem pede menos
+   movimento recebe a faixa parada — o JS não aplica deriva nem
+   acoplamento ao scroll — mas segue podendo arrastá-la para ler o
+   resto. Recortar a fila a um conjunto centralizado, como era antes,
+   deixava esse visitante sem acesso ao conteúdo que não cabia na
+   tela. */

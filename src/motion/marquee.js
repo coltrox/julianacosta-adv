@@ -36,6 +36,10 @@
    depois de DIRECTION_LOCK pixels na horizontal — antes disso o
    letreiro segue rodando e o scroll vertical passa intacto.
 
+   Em prefers-reduced-motion caem as forças 1 e 2, que andam sozinhas.
+   A 3 fica: arrastar é manipulação direta, e é o que dá acesso ao
+   texto que não cabe na tela.
+
    O número de conjuntos necessário é medido em tempo de execução:
    com poucos conjuntos, uma tela larga abre um vão na direita no
    pior ponto do ciclo. Quem renderiza recebe a conta por
@@ -89,15 +93,21 @@ const decay = (halfLife, dt) => Math.pow(0.5, dt / halfLife);
  *        chamado com quantos conjuntos a tela atual exige
  */
 export function createMarqueeLoop({ band, track, onCopiesNeeded }) {
-  // Em reduced-motion o letreiro é um bloco de texto parado e centralizado
-  // (ver styles/components/marquee.css): nada para montar aqui.
-  if (!band || !track || prefersReducedMotion()) return () => {};
+  if (!band || !track) return () => {};
+
+  /* Quem pede menos movimento perde o que anda sozinho — a deriva e o
+     acoplamento ao scroll — mas NÃO perde o arrasto. Arrastar é
+     manipulação direta, igual a rolar a página: só acontece porque o
+     visitante fez acontecer, e é o que permite ler a faixa até o fim.
+     Sem isso, quem usa reduced-motion fica sem acesso ao conteúdo. */
+  const soft = prefersReducedMotion();
 
   const setX = gsap.quickSetter(track, "x", "px");
 
   let cycle = 0; // largura de um conjunto, px — o período do loop
   let driftSpeed = 0; // px/s da deriva, com sinal
-  let restSpeed = 0; // px/s da deriva em repouso, sempre positivo
+  let restSpeed = 0; // px/s da deriva em repouso (0 em reduced-motion)
+  let nominalSpeed = 0; // px/s da cadência do ciclo, independente do modo
   let offset = 0; // deslocamento aplicado, mantido em (-cycle, 0]
   let scrollPending = 0; // px de scroll ainda não aplicados
   let lastScroll = null; // posição de scroll do último quadro observado
@@ -124,7 +134,8 @@ export function createMarqueeLoop({ band, track, onCopiesNeeded }) {
     if (!width) return;
 
     cycle = width;
-    restSpeed = cycle / CYCLE_SECONDS;
+    nominalSpeed = cycle / CYCLE_SECONDS;
+    restSpeed = soft ? 0 : nominalSpeed;
     offset = wrapOffset(offset);
     setX(offset);
 
@@ -179,7 +190,7 @@ export function createMarqueeLoop({ band, track, onCopiesNeeded }) {
         return;
       }
       // Descer (delta positivo) empurra para a esquerda; subir inverte.
-      scrollPending -= (current - lastScroll) * SCROLL_COUPLING;
+      if (!soft) scrollPending -= (current - lastScroll) * SCROLL_COUPLING;
       lastScroll = current;
     },
   });
@@ -260,7 +271,9 @@ export function createMarqueeLoop({ band, track, onCopiesNeeded }) {
 
     // Arrastou, parou e só então soltou: não era um arremesso.
     const held = (ev.timeStamp - dragAt) / 1000 > FLICK_TIMEOUT;
-    const cap = restSpeed * MAX_FLICK_BOOST;
+    // Medido na cadência do ciclo, não na deriva: em reduced-motion a
+    // deriva é 0 e o arremesso não teria para onde ir.
+    const cap = nominalSpeed * MAX_FLICK_BOOST;
 
     // A velocidade do gesto entra como deriva inicial e o frame a puxa de
     // volta ao repouso — é isso que dá a desaceleração.
