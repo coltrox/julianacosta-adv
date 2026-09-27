@@ -42,7 +42,7 @@ export const MARQUEE_ITEMS = [
   "Comunicação não-violenta",
   "Atendimento online no mundo todo",
   "Mediação de conflitos",
-  "Inventário em cartório",
+  "Inventário extrajudicial",
 ];
 
 /* -------------------------------- perfil -------------------------------- */
@@ -128,7 +128,7 @@ export const METHOD_DIAGNOSIS = [
 export const METHOD_SYSTEMIC = {
   title: "Técnica jurídica com olhar sistêmico.",
   text: "Na condução dos conflitos, adota princípios sistêmicos, ampliando o olhar sobre as relações envolvidas sem afastar a técnica jurídica. Isso significa considerar não apenas a questão jurídica apresentada, mas também as relações e circunstâncias que continuarão existindo depois dela.",
-  toolsIntro: "Na prática, isso pode envolver:",
+  toolsIntro: "Na prática, o trabalho envolve:",
   tools: [
     "Comunicação Não-Violenta (CNV)",
     "Mediação e negociação estruturada",
