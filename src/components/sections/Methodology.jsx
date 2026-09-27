@@ -1,7 +1,12 @@
-import { METHOD_PILLARS, METHOD_TOOLS } from "../../data/content.js";
+import { METHOD_DIAGNOSIS, METHOD_SYSTEMIC } from "../../data/content.js";
 import { CheckIcon } from "../../icons.jsx";
 import Kicker from "../ui/Kicker.jsx";
 
+/**
+ * Dois movimentos, na ordem em que acontecem: primeiro entender o caso,
+ * depois conduzi-lo. O segundo traz a lista do que isso significa na
+ * prática, e por isso vem junto dele e não antes.
+ */
 export default function Methodology() {
   return (
     <section className="section section-dark" id="metodo">
@@ -9,43 +14,31 @@ export default function Methodology() {
         <div className="editorial-aside">
           <Kicker>Método</Kicker>
           <h2 data-reveal>
-            Direito Sistêmico: <em>resolver, não prolongar.</em>
+            Diagnóstico <em>antes da estratégia.</em>
           </h2>
         </div>
 
         <div className="editorial-body">
-          <p className="lead" data-reveal>
-            Todo conflito acontece dentro de um sistema — uma família, um
-            condomínio, uma sociedade — em que as pessoas seguem se afetando
-            depois da sentença. Ignorar isso produz vitórias que não resolvem
-            nada.
-          </p>
-          <p data-reveal>
-            Por isso a condução dos casos usa ferramentas que vão além da
-            petição:
-          </p>
+          {METHOD_DIAGNOSIS.map((paragraph, i) => (
+            <p className={i === 0 ? "lead" : undefined} key={paragraph} data-reveal>
+              {paragraph}
+            </p>
+          ))}
+
+          <h3 className="method-sub" data-reveal>
+            {METHOD_SYSTEMIC.title}
+          </h3>
+          <p data-reveal>{METHOD_SYSTEMIC.text}</p>
+          <p data-reveal>{METHOD_SYSTEMIC.toolsIntro}</p>
 
           <ul className="tool-list" data-reveal>
-            {METHOD_TOOLS.map((tool) => (
+            {METHOD_SYSTEMIC.tools.map((tool) => (
               <li key={tool}>
                 <CheckIcon size={16} />
                 {tool}
               </li>
             ))}
           </ul>
-
-          <div className="pillars">
-            {METHOD_PILLARS.map((pillar) => {
-              const Icon = pillar.icon;
-              return (
-                <div className="pillar" key={pillar.title} data-reveal>
-                  <Icon size={24} />
-                  <h3>{pillar.title}</h3>
-                  <p>{pillar.desc}</p>
-                </div>
-              );
-            })}
-          </div>
         </div>
       </div>
     </section>

@@ -61,6 +61,13 @@
   letter-spacing: -0.015em;
   color: var(--ink);
 }
+/* O nome no topo é a âncora da marca e pede mais presença que a sua
+   repetição no rodapé, que fecha a página em vez de abri-la. Por isso o
+   aumento é escopado ao header e não à classe compartilhada. */
+.site-header .brand-name strong {
+  font-size: 1.5rem;
+}
+
 .brand-name small {
   font-size: 0.6875rem;
   font-weight: 500;

@@ -62,6 +62,9 @@
   color: var(--muted);
   margin-bottom: 34px;
 }
+.hero-lead p + p {
+  margin-top: 14px;
+}
 
 .hero-cta {
   display: flex;

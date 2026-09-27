@@ -1,5 +1,5 @@
 import { CONTACT } from "../../data/contact.js";
-import { EDUCATION } from "../../data/content.js";
+import { EDUCATION, PROFILE_PARAGRAPHS } from "../../data/content.js";
 import {
   ArrowIcon,
   BookIcon,
@@ -15,23 +15,17 @@ export default function Professional() {
         <div className="editorial-aside">
           <Kicker>A profissional</Kicker>
           <h2 data-reveal>
-            Técnica de quem já viu <em>muitos casos</em> — e paciência para ouvir
-            o seu.
+            Experiência para compreender cada caso.{" "}
+            <em>Técnica para conduzir o seu.</em>
           </h2>
         </div>
 
         <div className="editorial-body">
-          <p className="lead" data-reveal>
-            Advogada inscrita na OAB/SP, com mais de 20 anos dedicados ao Direito
-            privado. Atuação em Campinas e, por videoconferência, em todo o
-            Brasil — em causas judiciais e em soluções de cartório.
-          </p>
-          <p data-reveal>
-            O trabalho começa sempre pelo diagnóstico honesto: o que é possível,
-            o que é improvável, quanto tempo leva e quanto custa. Só depois vem a
-            estratégia. Cliente que entende o próprio caso decide melhor e se
-            frustra menos.
-          </p>
+          {PROFILE_PARAGRAPHS.map((paragraph, i) => (
+            <p className={i === 0 ? "lead" : undefined} key={paragraph} data-reveal>
+              {paragraph}
+            </p>
+          ))}
 
           <ul className="edu-list" data-reveal>
             {EDUCATION.map((item) => (

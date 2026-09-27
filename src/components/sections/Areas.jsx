@@ -1,4 +1,6 @@
-import { AREAS } from "../../data/content.js";
+import { AREAS, AREAS_FOOTER, AREAS_INTRO } from "../../data/content.js";
+import { ArrowIcon } from "../../icons.jsx";
+import AnchorLink from "../ui/AnchorLink.jsx";
 import Kicker from "../ui/Kicker.jsx";
 
 export default function Areas() {
@@ -8,11 +10,7 @@ export default function Areas() {
         <div className="section-head">
           <Kicker>Áreas de atuação</Kicker>
           <h2 data-reveal>Onde eu posso ajudar.</h2>
-          <p data-reveal>
-            Atuação consultiva, preventiva e contenciosa. Se o seu caso não
-            estiver aqui, pergunte: quando não é da minha área, indico um colega
-            de confiança.
-          </p>
+          <p data-reveal>{AREAS_INTRO}</p>
         </div>
 
         <div className="area-list">
@@ -37,6 +35,14 @@ export default function Areas() {
             );
           })}
         </div>
+
+        <p className="area-footer" data-reveal>
+          {AREAS_FOOTER.question}{" "}
+          <AnchorLink className="text-link" href="#contato">
+            {AREAS_FOOTER.cta}
+            <ArrowIcon size={16} />
+          </AnchorLink>
+        </p>
       </div>
     </section>
   );

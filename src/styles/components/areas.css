@@ -73,3 +73,13 @@
   background: rgba(27, 26, 23, 0.05);
   border-radius: var(--r-xs);
 }
+
+/* Fecha a lista: quem não se reconheceu em nenhuma área tem para onde ir. */
+.area-footer {
+  margin-top: 36px;
+  font-size: 1.0625rem;
+  color: var(--muted);
+}
+.area-footer .text-link {
+  margin-left: 4px;
+}

@@ -1,7 +1,7 @@
 import { useLayoutEffect, useRef } from "react";
 import julianaFoto from "../../assets/juliana-foto.jpg";
 import { CONTACT, OAB, WA_AGENDAR } from "../../data/contact.js";
-import { HERO_FACTS } from "../../data/content.js";
+import { HERO_FACTS, HERO_LEAD } from "../../data/content.js";
 import { PhoneIcon, WhatsAppIcon } from "../../icons.jsx";
 import { buildHeroIntro, buildParallax, gsap } from "../../motion/index.js";
 import Kicker from "../ui/Kicker.jsx";
@@ -35,11 +35,11 @@ export default function Hero() {
             <MaskedWords text="olhar humano." className="mask-accent" />
           </h1>
 
-          <p className="hero-lead measure" data-hero>
-            Mais de 20 anos em família e sucessões, imobiliário, contratos e
-            consumidor. A prioridade é resolver — por acordo sempre que for
-            possível, no processo quando for necessário.
-          </p>
+          <div className="hero-lead measure" data-hero>
+            {HERO_LEAD.map((paragraph) => (
+              <p key={paragraph}>{paragraph}</p>
+            ))}
+          </div>
 
           <div className="hero-cta" data-hero>
             <a

@@ -48,8 +48,7 @@
     border-right: none;
   }
 
-  .quote-wall,
-  .pillars {
+  .quote-wall {
     grid-template-columns: 1fr;
   }
 
@@ -121,10 +120,6 @@
   }
   .faq-panel p {
     padding-right: 8px;
-  }
-
-  .pillar {
-    padding: 26px 22px;
   }
 
   .sent {

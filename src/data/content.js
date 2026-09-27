@@ -5,22 +5,27 @@
    em que aparece na página. Cada bloco é consumido por um único
    componente em src/components/sections.
 
-   Editar texto aqui não exige mexer em componente nenhum.
+   Editar texto aqui não exige mexer em componente nenhum. O que
+   fica no componente é só o que carrega marcação — os títulos de
+   seção, onde um <em> pinta parte da frase de latão.
    ============================================================ */
 
 import {
-  AccordIcon,
   DocIcon,
   EstateIcon,
   FamilyIcon,
   PinIcon,
   ScaleIcon,
-  SealIcon,
   TagIcon,
   YearsIcon,
 } from "../icons.jsx";
 
 /* --------------------------------- hero --------------------------------- */
+
+export const HERO_LEAD = [
+  "Mais de 20 anos de experiência no Direito privado, com atuação especialmente voltada a Família e Sucessões e Direito Imobiliário.",
+  "Cada caso é analisado de forma individualizada, com orientação clara e estratégia definida a partir das suas particularidades.",
+];
 
 export const HERO_FACTS = [
   { icon: YearsIcon, label: "20+ anos de atuação" },
@@ -40,6 +45,13 @@ export const MARQUEE_ITEMS = [
 ];
 
 /* -------------------------------- perfil -------------------------------- */
+
+export const PROFILE_PARAGRAPHS = [
+  "Advogada com mais de 20 anos de atuação no Direito privado, com experiência na condução de demandas preventivas e contenciosas. Atendimento presencial em Campinas e região e, de forma online, para clientes em qualquer lugar do mundo.",
+  "Sua atuação é especialmente voltada ao Direito de Família e Sucessões e ao Direito Imobiliário, além de outras áreas do Direito privado.",
+  "Cada demanda é analisada de forma individualizada, considerando suas particularidades e o contexto envolvido. A orientação é clara e transparente quanto aos caminhos possíveis, riscos, prazos e custos, para que o cliente compreenda sua situação e participe das decisões com segurança.",
+  "Na condução dos conflitos, incorpora princípios do Direito Sistêmico, buscando uma atuação consciente das relações envolvidas e soluções juridicamente consistentes e, sempre que possível, sustentáveis.",
+];
 
 export const EDUCATION = [
   {
@@ -61,58 +73,67 @@ export const EDUCATION = [
 
 /* -------------------------------- áreas --------------------------------- */
 
+export const AREAS_INTRO =
+  "Atuação consultiva, preventiva e contenciosa, com foco em Direito de Família e Sucessões e Direito Imobiliário, além de outras áreas do Direito privado.";
+
+/** Fecha a lista de áreas: quem não se viu nela tem para onde ir. */
+export const AREAS_FOOTER = {
+  question: "Não encontrou o que procura?",
+  cta: "Fale conosco.",
+};
+
 export const AREAS = [
   {
     n: "01",
     icon: FamilyIcon,
-    title: "Família e sucessões",
-    desc: "Divórcio, guarda e convivência, alimentos, partilha, inventário judicial e em cartório. Conduzido com firmeza técnica e cuidado com quem está do outro lado da mesa.",
+    title: "Família e Sucessões",
+    desc: "Divórcio, guarda e convivência, alimentos, partilha, inventário judicial e extrajudicial.",
     tags: ["Divórcio", "Guarda", "Inventário", "Partilha"],
   },
   {
     n: "02",
     icon: EstateIcon,
-    title: "Imobiliário e condomínios",
-    desc: "Compra e venda com análise de documentação, regularização de matrícula, distratos, locações, cobrança de taxas e assessoria permanente a síndicos e administradoras.",
-    tags: ["Compra e venda", "Regularização", "Locação", "Assembleias"],
+    title: "Direito Imobiliário e Condomínios",
+    desc: "Compra e venda, contratos de locação, análise documental, regularização de imóveis, distratos, cobrança de taxas e assessoria a síndicos e administradoras.",
+    tags: ["Compra e venda", "Locação", "Regularização", "Condomínios"],
   },
   {
     n: "03",
     icon: DocIcon,
-    title: "Civil e empresarial",
-    desc: "Redação e revisão de contratos, responsabilidade civil, cobrança e recuperação de crédito, além da estruturação societária de pequenas e médias empresas.",
-    tags: ["Contratos", "Cobrança", "Societário", "Indenizações"],
+    title: "Direito Civil e Empresarial",
+    desc: "Contratos, responsabilidade civil, cobranças e recuperação de crédito, além de demandas empresariais.",
+    tags: ["Contratos", "Responsabilidade civil", "Cobrança", "Empresarial"],
   },
   {
     n: "04",
     icon: TagIcon,
-    title: "Direito do consumidor",
-    desc: "Defesa em cobranças indevidas, negativação irregular, vícios de produto e serviço, planos de saúde e contratos bancários, com foco em reparação efetiva.",
-    tags: ["Cobrança indevida", "Planos de saúde", "Bancos", "Vícios"],
+    title: "Direito do Consumidor",
+    desc: "Cobranças indevidas, negativação, vícios, contratos bancários e outras relações de consumo.",
+    tags: ["Cobrança indevida", "Negativação", "Vícios", "Bancos"],
   },
 ];
 
 /* -------------------------------- método -------------------------------- */
 
-export const METHOD_TOOLS = [
-  "Comunicação Não-Violenta (CNV)",
-  "Análise de movimentos essenciais",
-  "Mediação e negociação estruturada",
-  "Via extrajudicial como primeira opção",
+/** Primeiro movimento: entender antes de propor. */
+export const METHOD_DIAGNOSIS = [
+  "Cada caso é analisado de forma individualizada, considerando os fatos, documentos, contexto, relações envolvidas e objetivos do cliente. A partir desse diagnóstico, são avaliados os caminhos possíveis, seus riscos, prazos e consequências.",
+  "A estratégia é definida de acordo com as particularidades de cada situação, buscando, quando possível e adequado, uma solução consensual.",
 ];
 
-export const METHOD_PILLARS = [
-  {
-    icon: AccordIcon,
-    title: "Pacificação",
-    desc: "Tratar a raiz do conflito, e não só o pedido da petição. Isso preserva relações que vão continuar existindo depois do processo.",
-  },
-  {
-    icon: SealIcon,
-    title: "Acordos que duram",
-    desc: "Composição construída com as duas partes de acordo tende a ser cumprida — e não volta ao Judiciário seis meses depois.",
-  },
-];
+/** Segundo movimento: o olhar sistêmico, e o que ele significa na prática. */
+export const METHOD_SYSTEMIC = {
+  title: "Técnica jurídica com olhar sistêmico.",
+  text: "Na condução dos conflitos, adota princípios sistêmicos, ampliando o olhar sobre as relações envolvidas sem afastar a técnica jurídica. Isso significa considerar não apenas a questão jurídica apresentada, mas também as relações e circunstâncias que continuarão existindo depois dela.",
+  toolsIntro: "Na prática, isso pode envolver:",
+  tools: [
+    "Comunicação Não-Violenta (CNV)",
+    "Mediação e negociação estruturada",
+    "Análise das relações e movimentos envolvidos",
+    "Atuação extrajudicial",
+    "Construção de soluções consensuais",
+  ],
+};
 
 /* ------------------------------- clientes ------------------------------- */
 
@@ -133,20 +154,28 @@ export const TESTIMONIALS = [
 
 export const FAQ_ITEMS = [
   {
-    q: "Como funciona o atendimento online?",
-    a: "As reuniões acontecem por videoconferência e os documentos são assinados digitalmente. Como o processo judicial brasileiro é eletrônico, o acompanhamento à distância tem a mesma eficácia do presencial — inclusive para quem mora fora de São Paulo.",
+    q: "Como funciona o atendimento?",
+    a: "O atendimento pode ser presencial, em Campinas e região, ou por videoconferência, para clientes em qualquer lugar do mundo. A primeira conversa é destinada à compreensão da situação e à avaliação dos caminhos jurídicos possíveis. Quando houver necessidade de análise documental mais aprofundada ou de uma atuação específica, isso é explicado ao cliente antes da definição dos próximos passos.",
+  },
+  {
+    q: "O atendimento online tem a mesma validade do presencial?",
+    a: "Sim. As reuniões são realizadas por videoconferência e os documentos podem ser assinados digitalmente. A condução de processos judiciais eletrônicos também permite acompanhamento à distância. Para atendimentos relacionados a outras localidades ou jurisdições, são avaliadas previamente as condições específicas do caso.",
   },
   {
     q: "O que é Direito Sistêmico, na prática?",
-    a: "É olhar o conflito considerando todas as pessoas afetadas por ele, não só quem assina a petição. Na prática isso muda a condução: a escuta é mais cuidadosa, a negociação parte dos interesses reais de cada lado e o acordo tende a sair mais rápido e a ser cumprido.",
+    a: "É uma abordagem que amplia o olhar sobre o conflito, considerando não apenas a questão jurídica, mas também as relações envolvidas e que poderão permanecer depois da demanda. A técnica jurídica continua sendo a base da atuação, incorporando recursos como comunicação, negociação e mediação quando adequados ao caso.",
   },
   {
     q: "Quanto tempo leva um divórcio ou um inventário?",
-    a: "Depende da via. Havendo consenso, o cartório resolve em semanas. No Judiciário, com disputa, pode levar de meses a anos. É exatamente por essa diferença que a tentativa de acordo vem primeiro.",
+    a: "O prazo depende das características de cada caso, da existência ou não de consenso, da documentação disponível e da via adequada. Após a análise inicial, é possível explicar os principais fatores que podem influenciar o tempo de tramitação.",
   },
   {
     q: "Como funcionam os honorários?",
-    a: "A primeira conversa serve para entender o caso e dimensionar o trabalho. A partir dela você recebe uma proposta por escrito, com valores, forma de pagamento e o que está incluído.",
+    a: "Os honorários são definidos de acordo com a natureza e a complexidade do trabalho, considerando a extensão da atuação necessária em cada caso. Antes da contratação, o cliente recebe informações claras sobre os serviços, honorários e condições de pagamento.",
+  },
+  {
+    q: "Posso consultar antes de decidir se vou entrar com uma ação?",
+    a: "Sim. A consulta pode ser utilizada justamente para compreender a situação, avaliar os caminhos possíveis e conhecer riscos e alternativas antes de tomar uma decisão.",
   },
 ];
 
