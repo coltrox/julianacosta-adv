@@ -41,7 +41,7 @@ export const MARQUEE_ITEMS = [
   "Prevenção de litígios",
   "Resolução extrajudicial",
   "Comunicação não-violenta",
-  "Atendimento online em todo o Brasil",
+  "Atendimento online no mundo todo",
   "Mediação de conflitos",
   "Inventário em cartório",
 ];

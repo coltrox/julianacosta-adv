@@ -27,7 +27,7 @@ export default function Hero() {
       <div className="container hero-inner">
         <div className="hero-copy">
           <Kicker className="hero-kicker" data-hero>
-            Campinas · SP — e online em todo o Brasil
+            Campinas · SP — e online no mundo todo
           </Kicker>
 
           <h1 className="hero-title">

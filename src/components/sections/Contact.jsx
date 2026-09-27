@@ -174,7 +174,8 @@ export default function Contact() {
             <h2>Onde me encontrar.</h2>
             <p className="measure">
               Atendimento presencial em Campinas, com agendamento prévio, e
-              consultas por videoconferência para clientes de qualquer cidade.
+              consultas por videoconferência para clientes em qualquer lugar do
+              mundo.
             </p>
 
             <ul className="contact-list">
