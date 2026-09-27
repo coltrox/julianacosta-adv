@@ -20,8 +20,8 @@ export default function Footer() {
             </span>
           </AnchorLink>
           <p>
-            Advocacia em Campinas e em todo o Brasil, com foco em família e
-            sucessões, imobiliário, contratos e consumidor.
+            Advocacia em Campinas e região, com atuação preventiva e
+            contenciosa.
           </p>
           <div className="footer-socials">
             <a

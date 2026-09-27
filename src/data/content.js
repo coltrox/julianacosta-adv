@@ -14,23 +14,25 @@ import {
   DocIcon,
   EstateIcon,
   FamilyIcon,
-  PinIcon,
   ScaleIcon,
+  SealIcon,
   TagIcon,
   YearsIcon,
 } from "../icons.jsx";
 
 /* --------------------------------- hero --------------------------------- */
 
+/* Uma frase só, e sobre a conduta: tempo de atuação e áreas já estão
+   nos selos logo abaixo, e o kicker já diz de onde. */
 export const HERO_LEAD = [
-  "Mais de 20 anos de experiência no Direito privado, com atuação especialmente voltada a Família e Sucessões e Direito Imobiliário.",
   "Cada caso é analisado de forma individualizada, com orientação clara e estratégia definida a partir das suas particularidades.",
 ];
 
 export const HERO_FACTS = [
   { icon: YearsIcon, label: "20+ anos de atuação" },
   { icon: ScaleIcon, label: "Família, imóveis e contratos" },
-  { icon: PinIcon, label: "Campinas e todo o Brasil" },
+  // O kicker acima já diz onde; aqui cabe o que ele não diz.
+  { icon: SealIcon, label: "Atuação preventiva e contenciosa" },
 ];
 
 /* ------------------------------- letreiro ------------------------------- */
@@ -46,11 +48,13 @@ export const MARQUEE_ITEMS = [
 
 /* -------------------------------- perfil -------------------------------- */
 
+/* Aqui ficam as credenciais. O que este bloco dizia sobre áreas, sobre
+   analisar cada caso e sobre a condução dos conflitos saiu: as seções de
+   Áreas e Método dizem o mesmo logo em seguida, e com mais detalhe. */
 export const PROFILE_PARAGRAPHS = [
   "Advogada com mais de 20 anos de atuação no Direito privado, com experiência na condução de demandas preventivas e contenciosas. Atendimento presencial em Campinas e região e, de forma online, para clientes em qualquer lugar do mundo.",
-  "Sua atuação é especialmente voltada ao Direito de Família e Sucessões e ao Direito Imobiliário, além de outras áreas do Direito privado.",
-  "Cada demanda é analisada de forma individualizada, considerando suas particularidades e o contexto envolvido. A orientação é clara e transparente quanto aos caminhos possíveis, riscos, prazos e custos, para que o cliente compreenda sua situação e participe das decisões com segurança.",
-  "Na condução dos conflitos, incorpora princípios do Direito Sistêmico, buscando uma atuação consciente das relações envolvidas e soluções juridicamente consistentes e, sempre que possível, sustentáveis.",
+  "A orientação é clara e transparente, para que o cliente compreenda sua situação e participe das decisões com segurança.",
+  "Incorpora princípios do Direito Sistêmico, buscando soluções juridicamente consistentes e, sempre que possível, sustentáveis.",
 ];
 
 export const EDUCATION = [
@@ -117,7 +121,7 @@ export const AREAS = [
 
 /** Primeiro movimento: entender antes de propor. */
 export const METHOD_DIAGNOSIS = [
-  "Cada caso é analisado de forma individualizada, considerando os fatos, documentos, contexto, relações envolvidas e objetivos do cliente. A partir desse diagnóstico, são avaliados os caminhos possíveis, seus riscos, prazos e consequências.",
+  "A análise de cada caso considera os fatos, documentos, contexto, relações envolvidas e objetivos do cliente. A partir desse diagnóstico, são avaliados os caminhos possíveis, seus riscos, prazos e consequências.",
   "A estratégia é definida de acordo com as particularidades de cada situação, buscando, quando possível e adequado, uma solução consensual.",
 ];
 
