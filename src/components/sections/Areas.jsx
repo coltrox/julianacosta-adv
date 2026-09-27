@@ -9,7 +9,7 @@ export default function Areas() {
       <div className="container">
         <div className="section-head">
           <Kicker>Áreas de atuação</Kicker>
-          <h2 data-reveal>Onde eu posso ajudar.</h2>
+          <h2 data-reveal>Onde a atuação se concentra.</h2>
           <p data-reveal>{AREAS_INTRO}</p>
         </div>
 

@@ -63,9 +63,18 @@
 }
 /* O nome no topo é a âncora da marca e pede mais presença que a sua
    repetição no rodapé, que fecha a página em vez de abri-la. Por isso o
-   aumento é escopado ao header e não à classe compartilhada. */
+   aumento é escopado ao header e não à classe compartilhada — e a marca
+   cresce junto, senão o selo fica pequeno ao lado do nome. */
 .site-header .brand-name strong {
   font-size: 1.5rem;
+}
+.site-header .brand-mark {
+  width: 44px;
+  height: 44px;
+}
+.site-header .brand-mark svg {
+  width: 23px;
+  height: 23px;
 }
 
 .brand-name small {

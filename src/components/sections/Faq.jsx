@@ -23,7 +23,7 @@ export default function Faq() {
     <div className="faq">
       <div className="faq-head">
         <Kicker>Dúvidas frequentes</Kicker>
-        <h2 data-reveal>Antes de ligar.</h2>
+        <h2 data-reveal>Antes da primeira conversa.</h2>
       </div>
 
       <div className="faq-list" data-reveal>
