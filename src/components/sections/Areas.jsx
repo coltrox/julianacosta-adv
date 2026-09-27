@@ -8,8 +8,8 @@ export default function Areas() {
     <section className="section section-alt" id="areas">
       <div className="container">
         <div className="section-head">
-          <Kicker>Áreas de atuação</Kicker>
-          <h2 data-reveal>Onde a atuação se concentra.</h2>
+          <Kicker>Áreas</Kicker>
+          <h2 data-reveal>Onde o trabalho se concentra.</h2>
           <p data-reveal>{AREAS_INTRO}</p>
         </div>
 

@@ -11,7 +11,7 @@ export default function Voices() {
       <div className="container">
         <div className="section-head">
           <Kicker>Clientes</Kicker>
-          <h2 data-reveal>O que dizem os clientes.</h2>
+          <h2 data-reveal>Quem já foi atendido.</h2>
         </div>
 
         <div className="quote-wall">

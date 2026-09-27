@@ -15,7 +15,6 @@ import {
   EstateIcon,
   FamilyIcon,
   ScaleIcon,
-  SealIcon,
   TagIcon,
   YearsIcon,
 } from "../icons.jsx";
@@ -28,11 +27,11 @@ export const HERO_LEAD = [
   "Cada caso é analisado de forma individualizada, com orientação clara e estratégia definida a partir das suas particularidades.",
 ];
 
+/* Dois selos, não três: o terceiro só conseguia repetir o kicker (onde)
+   ou a intro das áreas (o tipo de atuação). */
 export const HERO_FACTS = [
   { icon: YearsIcon, label: "20+ anos de atuação" },
   { icon: ScaleIcon, label: "Família, imóveis e contratos" },
-  // O kicker acima já diz onde; aqui cabe o que ele não diz.
-  { icon: SealIcon, label: "Atuação preventiva e contenciosa" },
 ];
 
 /* ------------------------------- letreiro ------------------------------- */
@@ -52,7 +51,7 @@ export const MARQUEE_ITEMS = [
    analisar cada caso e sobre a condução dos conflitos saiu: as seções de
    Áreas e Método dizem o mesmo logo em seguida, e com mais detalhe. */
 export const PROFILE_PARAGRAPHS = [
-  "Advogada com mais de 20 anos de atuação no Direito privado, com experiência na condução de demandas preventivas e contenciosas. Atendimento presencial em Campinas e região e, de forma online, para clientes em qualquer lugar do mundo.",
+  "Advogada com mais de 20 anos de atuação no Direito privado. Atendimento presencial em Campinas e região e, de forma online, para clientes em qualquer lugar do mundo.",
   "A orientação é clara e transparente, para que o cliente compreenda sua situação e participe das decisões com segurança.",
   "Incorpora princípios do Direito Sistêmico, buscando soluções juridicamente consistentes e, sempre que possível, sustentáveis.",
 ];
@@ -98,21 +97,21 @@ export const AREAS = [
     n: "02",
     icon: EstateIcon,
     title: "Direito Imobiliário e Condomínios",
-    desc: "Compra e venda, contratos de locação, análise documental, regularização de imóveis, distratos, cobrança de taxas e assessoria a síndicos e administradoras.",
-    tags: ["Compra e venda", "Locação", "Regularização", "Condomínios"],
+    desc: "Compra e venda, locação, análise documental, regularização de imóveis, distratos, taxas condominiais e assessoria a síndicos e administradoras.",
+    tags: ["Compra e venda", "Locação", "Regularização", "Distratos"],
   },
   {
     n: "03",
     icon: DocIcon,
     title: "Direito Civil e Empresarial",
-    desc: "Contratos, responsabilidade civil, cobranças e recuperação de crédito, além de demandas empresariais.",
-    tags: ["Contratos", "Responsabilidade civil", "Cobrança", "Empresarial"],
+    desc: "Contratos, responsabilidade civil, recuperação de crédito e demandas empresariais.",
+    tags: ["Contratos", "Responsabilidade civil", "Recuperação de crédito"],
   },
   {
     n: "04",
     icon: TagIcon,
     title: "Direito do Consumidor",
-    desc: "Cobranças indevidas, negativação, vícios, contratos bancários e outras relações de consumo.",
+    desc: "Cobranças indevidas, negativação, vícios de produto e serviço, questões bancárias e outras relações de consumo.",
     tags: ["Cobrança indevida", "Negativação", "Vícios", "Bancos"],
   },
 ];
