@@ -1,5 +1,6 @@
+import { GOOGLE_REVIEW } from "../../data/contact.js";
 import { TESTIMONIALS } from "../../data/content.js";
-import { StarIcon } from "../../icons.jsx";
+import { ArrowIcon, StarIcon } from "../../icons.jsx";
 import Kicker from "../ui/Kicker.jsx";
 import Faq from "./Faq.jsx";
 
@@ -11,7 +12,7 @@ export default function Voices() {
       <div className="container">
         <div className="section-head">
           <Kicker>Clientes</Kicker>
-          <h2 data-reveal>Quem já foi atendido.</h2>
+          <h2 data-reveal>Depoimentos.</h2>
         </div>
 
         <div className="quote-wall">
@@ -33,6 +34,19 @@ export default function Voices() {
             </figure>
           ))}
         </div>
+
+        <p className="voices-cta" data-reveal>
+          Já foi atendida ou atendido?{" "}
+          <a
+            className="text-link"
+            href={GOOGLE_REVIEW}
+            target="_blank"
+            rel="noreferrer"
+          >
+            Avalie o escritório no Google
+            <ArrowIcon size={16} />
+          </a>
+        </p>
 
         <Faq />
       </div>
