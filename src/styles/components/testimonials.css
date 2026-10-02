@@ -2,13 +2,20 @@
    Depoimentos
    ============================================================ */
 
+/* O fio e o vão que separam dos Dúvidas frequentes saíram do mural de
+   depoimentos e passaram para cá, porque o convite para avaliar entrou
+   no meio: ele pertence aos depoimentos e tem de ficar do lado de
+   dentro do fio, não espremido depois dele. */
+.voices-block {
+  padding-bottom: clamp(56px, 7vw, 96px);
+  margin-bottom: clamp(56px, 7vw, 96px);
+  border-bottom: 1px solid var(--line);
+}
+
 .quote-wall {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: clamp(28px, 4vw, 56px);
-  padding-bottom: clamp(56px, 7vw, 96px);
-  margin-bottom: clamp(56px, 7vw, 96px);
-  border-bottom: 1px solid var(--line);
 }
 
 .quote {
@@ -59,13 +66,17 @@
 }
 
 /* Fecha os depoimentos convidando quem já é cliente a deixar o seu.
-   Mesmo formato do fecho das áreas, para a página ter um só gesto de
-   "e se eu quiser seguir daqui". */
+   É botão, e não link de texto: a ação vale o peso, e no meio de uma
+   seção de texto um link fino passa batido. */
 .voices-cta {
-  margin-top: 36px;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 14px 20px;
+  margin-top: clamp(34px, 4vw, 52px);
   font-size: 1.0625rem;
   color: var(--muted);
 }
-.voices-cta .text-link {
-  margin-left: 4px;
+.voices-cta .btn svg {
+  color: var(--brass-deep);
 }
