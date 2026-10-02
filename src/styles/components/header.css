@@ -67,6 +67,10 @@
    cresce junto, senão o selo fica pequeno ao lado do nome. */
 .site-header .brand-name strong {
   font-size: 1.5rem;
+  /* Quando o nome cede e quebra (telas estreitas), balanceia as linhas:
+     sem isso o corte caía em "Juliana Soares da / Costa", deixando a
+     última palavra órfã. */
+  text-wrap: balance;
 }
 .site-header .brand-mark {
   width: 44px;
@@ -185,18 +189,23 @@
 }
 
 .menu-mobile-foot {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 10px 22px;
+  display: grid;
+  gap: 22px;
   padding-top: 26px;
   font-size: 0.9375rem;
 }
-.menu-mobile-foot a {
+
+.menu-mobile-contatos {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px 22px;
+}
+.menu-mobile-contatos a {
   display: inline-flex;
   align-items: center;
   gap: 8px;
   color: var(--body);
 }
-.menu-mobile-foot a:hover {
+.menu-mobile-contatos a:hover {
   color: var(--brass-deep);
 }

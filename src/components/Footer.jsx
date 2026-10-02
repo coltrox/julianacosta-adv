@@ -15,7 +15,7 @@ export default function Footer() {
               <ScaleIcon size={20} />
             </span>
             <span className="brand-name">
-              <strong>Juliana Costa</strong>
+              <strong>Juliana Soares da Costa</strong>
               <small>Advocacia</small>
             </span>
           </AnchorLink>

@@ -73,6 +73,16 @@
     display: none;
   }
 
+  /* Sem o nav e sem o CTA, a marca é o único item flexível do header —
+     e com flex-shrink: 0 ela empurrava o botão do menu para fora da
+     tela em vez de ceder. Em 320px o hambúrguer ficava inalcançável,
+     escondido pelo overflow-x: clip do #root. Cedendo, o nome quebra em
+     duas linhas e o botão volta para dentro. */
+  .brand {
+    flex-shrink: 1;
+    min-width: 0;
+  }
+
   .hero {
     padding-top: 114px;
   }

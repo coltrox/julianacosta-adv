@@ -30,3 +30,11 @@
   font-size: 0.9375rem;
   font-weight: 500;
 }
+
+/* Com o menu do celular aberto, o flutuante fica acima do painel na
+   pilha e tapa o último contato. Ali ele é redundante: a mesma ação
+   está no botão grande dentro do menu. */
+html.has-menu-open .wa-float {
+  opacity: 0;
+  pointer-events: none;
+}
