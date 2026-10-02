@@ -15,19 +15,18 @@
   padding-bottom: clamp(40px, 5vw, 56px);
 }
 
-.site-footer .brand-mark {
-  background: transparent;
-  border-color: rgba(239, 234, 224, 0.18);
-  color: var(--brass-light);
-}
-.site-footer .brand-name strong {
+/* O rodapé recebe o logotipo inteiro, com nome e "ADVOCACIA" no
+   próprio desenho. Ele pinta com currentColor, e é isso que o deixa
+   visível aqui: o arquivo original vinha com o preto cravado em cada
+   traço e simplesmente desaparecia neste fundo. */
+.footer-logo {
+  display: block;
+  width: clamp(188px, 21vw, 224px);
+  height: auto;
   color: var(--on-dark);
+  transition: color 0.25s ease;
 }
-.site-footer .brand-name small {
-  color: var(--on-dark-muted);
-}
-.site-footer .brand:hover .brand-mark {
-  border-color: var(--brass-light);
+.site-footer .brand:hover .footer-logo {
   color: var(--brass-light);
 }
 

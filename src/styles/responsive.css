@@ -146,6 +146,12 @@
   .brand-name small {
     display: none;
   }
+  /* Em 320px o monograma de 38px tirava do nome os 29px que faltavam
+     para ele caber em duas linhas — passava a quebrar em três e o
+     header crescia 5px. Medido: a 30px volta a duas linhas. */
+  .site-header .brand-mark {
+    height: 30px;
+  }
 }
 
 @media (min-width: 1081px) {

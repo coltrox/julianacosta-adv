@@ -33,19 +33,20 @@
   flex-shrink: 0;
 }
 
+/* O monograma entra solto, sem moldura e sem fundo: é um traço
+   caligráfico de proporção larga (1,92 : 1) e, enfiado no selo
+   quadrado que havia aqui, sobrava borda de um lado e faltava do
+   outro. A altura manda e a largura acompanha — nunca o contrário,
+   senão o desenho distorce. */
 .brand-mark {
-  display: grid;
-  place-items: center;
-  width: 38px;
-  height: 38px;
-  border: 1px solid var(--line);
-  border-radius: var(--r-xs);
+  display: block;
+  width: auto;
+  height: 30px;
+  flex-shrink: 0;
   color: var(--brass-deep);
-  background: var(--surface);
-  transition: border-color 0.25s ease, color 0.25s ease;
+  transition: color 0.25s ease;
 }
 .brand:hover .brand-mark {
-  border-color: var(--brass);
   color: var(--brass);
 }
 
@@ -73,12 +74,7 @@
   text-wrap: balance;
 }
 .site-header .brand-mark {
-  width: 44px;
-  height: 44px;
-}
-.site-header .brand-mark svg {
-  width: 23px;
-  height: 23px;
+  height: 38px;
 }
 
 .brand-name small {

@@ -55,6 +55,7 @@ const dadosEstruturados = () => ({
       description: DESCRICAO,
       url: SITE_URL,
       image: `${SITE_URL}og.jpg`,
+      logo: `${SITE_URL}logo.svg`,
       telephone: CONTACT.phoneE164,
       email: CONTACT.email,
       priceRange: "$$",

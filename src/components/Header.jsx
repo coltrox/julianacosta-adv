@@ -8,9 +8,9 @@ import {
   MailIcon,
   MenuIcon,
   PhoneIcon,
-  ScaleIcon,
   WhatsAppIcon,
 } from "../icons.jsx";
+import { LogoMark } from "../logo.jsx";
 import {
   buildHeaderState,
   gsap,
@@ -78,9 +78,7 @@ export default function Header({ active }) {
       <header className={`site-header ${open ? "is-open" : ""}`} ref={headerRef}>
         <div className="container header-inner">
           <AnchorLink href="#topo" className="brand" aria-label="Início">
-            <span className="brand-mark">
-              <ScaleIcon size={20} />
-            </span>
+            <LogoMark className="brand-mark" />
             <span className="brand-name">
               <strong>Juliana Soares da Costa</strong>
               <small>Advocacia</small>

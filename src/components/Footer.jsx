@@ -1,6 +1,7 @@
 import { CONTACT, OAB } from "../data/contact.js";
 import { NAV_LINKS } from "../data/navigation.js";
-import { InstagramIcon, LinkedInIcon, ScaleIcon } from "../icons.jsx";
+import { InstagramIcon, LinkedInIcon } from "../icons.jsx";
+import { LogoLockup } from "../logo.jsx";
 import AnchorLink from "./ui/AnchorLink.jsx";
 
 export default function Footer() {
@@ -10,13 +11,14 @@ export default function Footer() {
     <footer className="site-footer">
       <div className="container footer-top">
         <div className="footer-brand">
+          {/* Aqui entra o logotipo inteiro, que já traz o nome e
+              "ADVOCACIA" desenhados — por isso não há texto ao lado,
+              que repetiria o que o desenho diz. O svg é aria-hidden,
+              então o nome acessível do link vem do texto escondido. */}
           <AnchorLink href="#topo" className="brand">
-            <span className="brand-mark">
-              <ScaleIcon size={20} />
-            </span>
-            <span className="brand-name">
-              <strong>Juliana Soares da Costa</strong>
-              <small>Advocacia</small>
+            <LogoLockup className="footer-logo" />
+            <span className="sr-only">
+              Juliana Soares da Costa · Advocacia · voltar ao topo
             </span>
           </AnchorLink>
           <p>
