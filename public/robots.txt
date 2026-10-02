@@ -1,0 +1,7 @@
+# Tudo liberado: é um site de uma página só, e nada aqui precisa ficar
+# fora do índice. Importante não bloquear /assets/, senão o Google não
+# consegue renderizar a página para avaliá-la.
+User-agent: *
+Allow: /
+
+Sitemap: https://julianasoaresdacosta.com.br/sitemap.xml

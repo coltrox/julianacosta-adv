@@ -15,8 +15,17 @@
   --ink: #1b1a17;
   --ink-soft: #3b3831;
   --body: #5c574e;
-  --muted: #6f6a60;
-  --faint: #918a7e;
+  /* Estes dois convergiram quando o contraste passou a ser exigido:
+     em #eee8dd não cabem dois cinzas distintos acima de 4,5:1 sem
+     invadir o --body. Seguem com nomes separados porque são papéis
+     diferentes (prosa secundária e rótulo miúdo) e podem divergir de
+     novo se os fundos mudarem. Medidos: 4,61:1 no pior fundo. */
+  --muted: #6c675e;
+  --faint: #6c675e;
+
+  /* O tom claro original. Vale só onde a WCAG não exige contraste:
+     o bloco da marca, que é logotipo. */
+  --ornament: #918a7e;
 
   /* --- linhas --- */
   --line: #e2dace;

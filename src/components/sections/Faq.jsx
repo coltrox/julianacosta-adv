@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { FAQ_ITEMS } from "../../data/content.js";
+import { FAQ_ITEMS } from "../../data/faq.js";
 import { ChevronIcon } from "../../icons.jsx";
 import { animateDisclosure } from "../../motion/index.js";
 import Kicker from "../ui/Kicker.jsx";

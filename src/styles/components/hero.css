@@ -45,7 +45,9 @@
   display: inline-block;
   overflow: hidden;
   vertical-align: bottom;
-  margin-right: 0.24em;
+  /* Sem margin-right: o espaço entre palavras agora é um espaço de
+     verdade no texto (ver MaskedWords), senão o <h1> chegava sem
+     espaço nenhum a quem lê o documento. */
   padding-bottom: 0.14em;
   margin-bottom: -0.14em;
 }

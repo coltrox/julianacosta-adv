@@ -46,7 +46,7 @@ export default function Footer() {
         </div>
 
         <nav className="footer-col" aria-label="Seções">
-          <h4>Site</h4>
+          <h3 className="footer-col-title">Site</h3>
           <ul>
             {NAV_LINKS.map((link) => (
               <li key={link.href}>
@@ -57,7 +57,7 @@ export default function Footer() {
         </nav>
 
         <div className="footer-col">
-          <h4>Contato</h4>
+          <h3 className="footer-col-title">Contato</h3>
           <ul>
             <li>
               <a href={CONTACT.phoneHref}>{CONTACT.phone}</a>

@@ -44,7 +44,9 @@
   padding-top: 5px;
   font-family: var(--font-display);
   font-size: 1.125rem;
-  color: var(--brass);
+  /* --brass dava 3,24:1 sobre o fundo desta seção. O tom profundo
+     passa (4,89:1) e continua sendo latão. */
+  color: var(--brass-deep);
 }
 
 .area-icon {

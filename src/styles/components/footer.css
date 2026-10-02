@@ -59,12 +59,29 @@
   margin-bottom: 20px;
   color: var(--brass-light);
 }
+/* Rotula a coluna sem subir na hierarquia: é <h3> para não pular do
+   <h2> das seções direto para <h4>, e a aparência de rótulo miúdo vem
+   da classe, não do nível. */
+.footer-col-title {
+  font-family: var(--font-sans);
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  /* Fundo escuro pede o dim claro: --faint é escuro e aqui reprovaria. */
+  color: var(--on-dark-muted);
+}
+
 .footer-col ul {
   display: grid;
-  gap: 13px;
+  gap: 5px;
   font-size: 0.9375rem;
 }
 .footer-col a {
+  /* inline-block + folga vertical para o alvo de toque chegar aos 24px
+     que a WCAG 2.5.8 pede; como <a> em linha, a caixa media ~15px. */
+  display: inline-block;
+  padding: 4px 0;
   overflow-wrap: break-word;
   transition: color 0.2s ease;
 }
@@ -89,7 +106,7 @@
 }
 .footer-legal {
   max-width: 62ch;
-  color: var(--faint);
+  color: var(--on-dark-muted);
 }
 
 .footer-socials {
