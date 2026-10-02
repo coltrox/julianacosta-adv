@@ -16,6 +16,40 @@ import {
 } from "../../lib/contact-form.js";
 import Kicker from "../ui/Kicker.jsx";
 
+/**
+ * Prefixo nos ids dos campos. Sem ele, o campo "contato" colidia com a
+ * <section id="contato"> que o menu usa como âncora: document.getElementById
+ * devolvia a seção, então o foco no erro não ia a lugar nenhum e o <label>
+ * do campo apontava para o elemento errado.
+ */
+const campoId = (campo) => `campo-${campo}`;
+
+/**
+ * Entrega a mensagem ao WhatsApp do visitante.
+ *
+ * Aba nova é o melhor resultado — o site continua aberto atrás dela. Mas o
+ * navegador pode recusar window.open, e aí é preciso ter um plano B, senão
+ * a tela diz "abri o WhatsApp" sem nada ter aberto. Note que o retorno só
+ * serve para detectar a recusa quando `noopener` NÃO é passado: com ele o
+ * retorno é sempre null, por especificação. Então abrimos sem a flag e
+ * cortamos a referência em seguida.
+ */
+function abrirWhatsApp(url) {
+  let aba = null;
+  try {
+    aba = window.open(url, "_blank");
+  } catch {
+    // Alguns navegadores lançam em vez de devolver null.
+  }
+  if (aba) {
+    aba.opener = null;
+    return;
+  }
+  // Recusado: navegar na própria aba é o caminho que o celular entende
+  // para entregar o link ao aplicativo.
+  window.location.href = url;
+}
+
 export default function Contact() {
   const [form, setForm] = useState(EMPTY_FORM);
   const [errors, setErrors] = useState({});
@@ -39,12 +73,12 @@ export default function Contact() {
 
     const [firstInvalid] = Object.keys(found);
     if (firstInvalid) {
-      document.getElementById(firstInvalid)?.focus();
+      document.getElementById(campoId(firstInvalid))?.focus();
       return;
     }
 
     const url = buildWhatsAppUrl(form);
-    window.open(url, "_blank", "noopener,noreferrer");
+    abrirWhatsApp(url);
     setSent({ nome: form.nome.trim(), url });
     setForm(EMPTY_FORM);
   };
@@ -81,9 +115,9 @@ export default function Contact() {
             ) : (
               <form className="form" onSubmit={handleSubmit} noValidate>
                 <div className="field">
-                  <label htmlFor="nome">Nome</label>
+                  <label htmlFor={campoId("nome")}>Nome</label>
                   <input
-                    id="nome"
+                    id={campoId("nome")}
                     name="nome"
                     type="text"
                     autoComplete="name"
@@ -101,9 +135,9 @@ export default function Contact() {
                 </div>
 
                 <div className="field">
-                  <label htmlFor="contato">E-mail ou telefone</label>
+                  <label htmlFor={campoId("contato")}>E-mail ou telefone</label>
                   <input
-                    id="contato"
+                    id={campoId("contato")}
                     name="contato"
                     type="text"
                     autoComplete="email"
@@ -123,10 +157,10 @@ export default function Contact() {
                 </div>
 
                 <div className="field">
-                  <label htmlFor="assunto">Assunto</label>
+                  <label htmlFor={campoId("assunto")}>Assunto</label>
                   <div className="select-wrap">
                     <select
-                      id="assunto"
+                      id={campoId("assunto")}
                       name="assunto"
                       value={form.assunto}
                       onChange={update("assunto")}
@@ -142,11 +176,11 @@ export default function Contact() {
                 </div>
 
                 <div className="field">
-                  <label htmlFor="resumo">
+                  <label htmlFor={campoId("resumo")}>
                     Resumo <span>(opcional)</span>
                   </label>
                   <textarea
-                    id="resumo"
+                    id={campoId("resumo")}
                     name="resumo"
                     rows={4}
                     placeholder="Em poucas linhas, o que está acontecendo"

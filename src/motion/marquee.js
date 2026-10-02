@@ -78,6 +78,18 @@ const SPEED_HALF_LIFE = 0.28;
    (toque, roda) para a deriva não piscar de volta no meio do gesto. */
 const UP_HOLD_SECONDS = 0.2;
 
+/* Começou a subir: o letreiro para por completo antes de aceitar o
+   sentido novo — nem deriva, nem scroll. Suspender só a deriva ainda
+   deixava a troca de sentido acontecer dentro de um quadro, e é essa
+   virada instantânea que se sente como travadinha no celular. Com a
+   parada, a inversão passa a ter três tempos legíveis: para, espera,
+   volta.
+
+   Dispara uma vez por gesto, não a cada rajada de quadros: o sinal é a
+   transição para "subindo", e enquanto UP_HOLD_SECONDS não expira o
+   gesto conta como o mesmo. */
+const UP_FREEZE_SECONDS = 0.12;
+
 /* Meia-vida da saída da deriva: sai rápido, para não brigar nem por um
    quadro. A volta usa SPEED_HALF_LIFE, mais lenta, para reaparecer sem
    degrau. */
@@ -125,6 +137,7 @@ export function createMarqueeLoop({ band, track, onCopiesNeeded }) {
   let offset = 0; // deslocamento aplicado, mantido em (-cycle, 0]
   let lastScroll = null; // posição de scroll no quadro anterior
   let upHold = 0; // segundos restantes de deriva suspensa
+  let upFreeze = 0; // segundos restantes de parada total
   let running = false;
 
   let pointerId = null; // ponteiro em observação
@@ -166,6 +179,7 @@ export function createMarqueeLoop({ band, track, onCopiesNeeded }) {
     // Decai antes de qualquer saída antecipada, senão um arrasto longo
     // deixaria a suspensão pendurada para depois dele.
     if (upHold > 0) upHold = Math.max(0, upHold - dt);
+    if (upFreeze > 0) upFreeze = Math.max(0, upFreeze - dt);
 
     if (dragging) {
       // Gesto horizontal em curso: o ponteiro é a única fonte de movimento.
@@ -190,7 +204,19 @@ export function createMarqueeLoop({ band, track, onCopiesNeeded }) {
     lastScroll = current;
 
     // Descer empurra para a esquerda; subir inverte.
-    if (scrolled < 0) upHold = UP_HOLD_SECONDS;
+    if (scrolled < 0) {
+      // Primeiro quadro subindo deste gesto: para tudo por um instante.
+      if (upHold === 0) upFreeze = UP_FREEZE_SECONDS;
+      upHold = UP_HOLD_SECONDS;
+    }
+
+    // Parada: o letreiro fica imóvel, e o deslocamento do scroll deste
+    // intervalo é descartado de propósito — a faixa é ornamento e não
+    // precisa fechar a conta com a posição da página.
+    if (upFreeze > 0) {
+      driftSpeed = 0;
+      return;
+    }
 
     // Subindo, a deriva é suspensa e o movimento fica só por conta do
     // scroll. Parou de subir, ela reaparece em curva.
@@ -320,6 +346,7 @@ export function createMarqueeLoop({ band, track, onCopiesNeeded }) {
     // que passou enquanto ele estava fora.
     lastScroll = null;
     upHold = 0;
+    upFreeze = 0;
   }
 
   // A faixa recebe o começo do gesto; o resto escuta a janela para que o
