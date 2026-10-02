@@ -25,6 +25,17 @@ export default function Header({ active }) {
   const headerRef = useRef(null);
   const panelRef = useRef(null);
 
+  /**
+   * Fecha o painel destravando o scroll na hora. O estado do React só
+   * chega ao efeito depois de renderizar, e o AnchorLink rola logo em
+   * seguida, ainda no mesmo clique — se o Lenis ainda estiver parado
+   * nesse instante, ele descarta o scrollTo e a navegação não acontece.
+   */
+  const fecharMenu = () => {
+    setOpen(false);
+    lockScroll(false);
+  };
+
   // Painel aberto: trava o scroll da página e escalona a entrada dos itens.
   useEffect(() => {
     lockScroll(open);
@@ -128,7 +139,7 @@ export default function Header({ active }) {
               key={link.href}
               href={link.href}
               data-menu-item
-              onNavigate={() => setOpen(false)}
+              onNavigate={fecharMenu}
             >
               <span>{link.label}</span>
               <ArrowIcon size={18} />

@@ -65,35 +65,42 @@ const SCROLL_COUPLING = 0.45;
    deriva quando o leitor para de subir. */
 const SPEED_HALF_LIFE = 0.28;
 
-/* Subindo, a deriva sai do caminho. As duas forças apontam para lados
-   opostos — a deriva para a esquerda, o scroll para a direita — e no fim
-   de cada gesto, quando a velocidade do scroll cai abaixo de
-   restSpeed / SCROLL_COUPLING, a deriva volta a ganhar e o letreiro
-   inverte outra vez. Esse vai-e-vem é o que se sente como travadinha.
-   Suspender a deriva deixa o movimento puramente proporcional ao gesto,
-   num sentido só.
+/* Enquanto o leitor rola, a deriva cede — nos dois sentidos.
 
-   Quanto a deriva fica suspensa depois do último quadro de scroll para
-   cima. Precisa cobrir o intervalo entre quadros de um scroll em rajadas
-   (toque, roda) para a deriva não piscar de volta no meio do gesto. */
-const UP_HOLD_SECONDS = 0.2;
+   A deriva existe para o letreiro não ficar parado, não para competir
+   com o gesto. Somada a um scroll para cima, as duas forças apontam
+   para lados opostos e se anulam perto de certa velocidade; alternando
+   sobe-desce, o sentido cruza esse ponto toda hora e o movimento fica
+   piscando. Tratar só a subida, com uma parada curta, trocava um
+   problema por outro: cada troca de sentido ganhava um tranco próprio.
 
-/* Começou a subir: o letreiro para por completo antes de aceitar o
-   sentido novo — nem deriva, nem scroll. Suspender só a deriva ainda
-   deixava a troca de sentido acontecer dentro de um quadro, e é essa
-   virada instantânea que se sente como travadinha no celular. Com a
-   parada, a inversão passa a ter três tempos legíveis: para, espera,
-   volta.
+   Com a deriva cedendo na proporção de quanto se está rolando, o
+   movimento durante o gesto é só o do gesto — para cima volta, para
+   baixo acelera, e o quanto é proporcional à velocidade do scroll. Nada
+   a cruzar, nada a travar. Parou de rolar, a deriva volta sozinha.
 
-   Dispara uma vez por gesto, não a cada rajada de quadros: o sinal é a
-   transição para "subindo", e enquanto UP_HOLD_SECONDS não expira o
-   gesto conta como o mesmo. */
-const UP_FREEZE_SECONDS = 0.12;
+   Velocidade de scroll (px/s) a partir da qual a deriva cede por
+   inteiro. Um scroll de leitura já passa disso. */
+const SCROLL_FULL = 260;
 
-/* Meia-vida da saída da deriva: sai rápido, para não brigar nem por um
-   quadro. A volta usa SPEED_HALF_LIFE, mais lenta, para reaparecer sem
-   degrau. */
-const DRIFT_OUT_HALF_LIFE = 0.1;
+/* Meia-vida da entrada e da saída da atividade. Sobe rápido, para a
+   deriva sair do caminho já no primeiro quadro do gesto; desce devagar,
+   para voltar sem degrau e para aguentar scroll em rajadas — entre duas
+   rajadas a atividade não chega a cair, então não há o que piscar. */
+const ACTIVITY_IN_HALF_LIFE = 0.05;
+const ACTIVITY_OUT_HALF_LIFE = 0.32;
+
+/* O navegador não entrega o scroll de forma contínua: entrega em
+   degraus. Medido no celular, 53 de 63 quadros de um gesto vinham com
+   delta ZERO, e o resto em saltos de 20px. Aplicado cru, isso serrava o
+   letreiro — ele ia 11px com o gesto num quadro e voltava 1px de deriva
+   no seguinte, alternando.
+
+   Então o deslocamento do scroll entra numa dívida e é pago em curva,
+   uma fração por quadro. Nada se perde, a escada vira rampa, e o preço
+   é um atraso de uns dois quadros que ninguém percebe. */
+const SCROLL_RELEASE_HALF_LIFE = 0.06;
+
 
 /* Quantos pixels na horizontal o gesto precisa andar antes de o letreiro
    assumir que é um arrasto. Abaixo disso o gesto ainda pode ser um scroll
@@ -136,8 +143,8 @@ export function createMarqueeLoop({ band, track, onCopiesNeeded }) {
   let restSpeed = 0; // px/s da deriva em repouso, sempre positivo
   let offset = 0; // deslocamento aplicado, mantido em (-cycle, 0]
   let lastScroll = null; // posição de scroll no quadro anterior
-  let upHold = 0; // segundos restantes de deriva suspensa
-  let upFreeze = 0; // segundos restantes de parada total
+  let activity = 0; // 0 parado, 1 rolando com gosto — o quanto a deriva cede
+  let scrollDebt = 0; // px de scroll que chegaram e ainda não foram pagos
   let running = false;
 
   let pointerId = null; // ponteiro em observação
@@ -176,16 +183,11 @@ export function createMarqueeLoop({ band, track, onCopiesNeeded }) {
     if (!cycle) return;
     const dt = Math.min(deltaMs / 1000, MAX_FRAME);
 
-    // Decai antes de qualquer saída antecipada, senão um arrasto longo
-    // deixaria a suspensão pendurada para depois dele.
-    if (upHold > 0) upHold = Math.max(0, upHold - dt);
-    if (upFreeze > 0) upFreeze = Math.max(0, upFreeze - dt);
-
     if (dragging) {
       // Gesto horizontal em curso: o ponteiro é a única fonte de movimento.
       // A referência de scroll acompanha sem ser aplicada, senão o letreiro
       // andaria duas vezes ao fim do arrasto.
-      lastScroll = trigger.scroll();
+      lastScroll = window.scrollY;
       if (dragPending) {
         offset = wrapOffset(offset + dragPending);
         dragPending = 0;
@@ -194,40 +196,40 @@ export function createMarqueeLoop({ band, track, onCopiesNeeded }) {
       return;
     }
 
-    // O scroll é lido aqui, e não num callback do ScrollTrigger, porque
-    // os eventos de scroll chegam em rajadas: havia quadro com delta e
-    // quadro sem, e o letreiro alternava entre "andou com o scroll" e "só
-    // a deriva". Lendo a posição uma vez por quadro, todo quadro recebe o
-    // deslocamento real do intervalo e o movimento sai contínuo.
-    const current = trigger.scroll();
+    // Lê a posição do scroll do próprio navegador, uma vez por quadro.
+    //
+    // Nem num callback do ScrollTrigger, nem pelo trigger.scroll(): os
+    // dois entregam valor em cache, atualizado quando chega evento de
+    // scroll — e eventos chegam em rajadas. Dava quadro com delta e
+    // quadro sem, e o letreiro serrava entre "andou com o gesto" e "só a
+    // deriva": medido em +11px, −1px, +11px, −1px a cada quadro.
+    // window.scrollY está sempre atual na hora do quadro.
+    const current = window.scrollY;
     const scrolled = lastScroll === null ? 0 : current - lastScroll;
     lastScroll = current;
 
-    // Descer empurra para a esquerda; subir inverte.
-    if (scrolled < 0) {
-      // Primeiro quadro subindo deste gesto: para tudo por um instante.
-      if (upHold === 0) upFreeze = UP_FREEZE_SECONDS;
-      upHold = UP_HOLD_SECONDS;
-    }
+    // Descer empurra para a esquerda, subir para a direita. Entra como
+    // dívida, não como deslocamento imediato.
+    scrollDebt -= scrolled * SCROLL_COUPLING;
+    const pago = scrollDebt * (1 - decay(SCROLL_RELEASE_HALF_LIFE, dt));
+    scrollDebt -= pago;
 
-    // Parada: o letreiro fica imóvel, e o deslocamento do scroll deste
-    // intervalo é descartado de propósito — a faixa é ornamento e não
-    // precisa fechar a conta com a posição da página.
-    if (upFreeze > 0) {
-      driftSpeed = 0;
-      return;
-    }
+    // Quanto se está rolando, sem olhar o sentido: é simétrico de
+    // propósito, porque o que atrapalha é a deriva competir com o gesto,
+    // e ela compete nos dois sentidos. Medido no que foi pago, que já
+    // está suavizado — o delta cru é zero na maioria dos quadros.
+    const velGesto = Math.abs(pago / dt) / SCROLL_COUPLING;
+    const alvoAtividade = Math.min(1, velGesto / SCROLL_FULL);
+    const meiaVida =
+      alvoAtividade > activity ? ACTIVITY_IN_HALF_LIFE : ACTIVITY_OUT_HALF_LIFE;
+    activity += (alvoAtividade - activity) * (1 - decay(meiaVida, dt));
 
-    // Subindo, a deriva é suspensa e o movimento fica só por conta do
-    // scroll. Parou de subir, ela reaparece em curva.
-    const suspended = upHold > 0;
-    const target = suspended ? 0 : -restSpeed;
-    const halfLife = suspended ? DRIFT_OUT_HALF_LIFE : SPEED_HALF_LIFE;
-    driftSpeed += (target - driftSpeed) * (1 - decay(halfLife, dt));
+    // A deriva cede na proporção da atividade. Com o gesto a pleno, ela
+    // é zero e só o scroll move o letreiro.
+    const alvoDeriva = -restSpeed * (1 - activity);
+    driftSpeed += (alvoDeriva - driftSpeed) * (1 - decay(SPEED_HALF_LIFE, dt));
 
-    offset = wrapOffset(
-      offset + driftSpeed * dt - scrolled * SCROLL_COUPLING
-    );
+    offset = wrapOffset(offset + driftSpeed * dt + pago);
     setX(offset);
   };
 
@@ -345,8 +347,8 @@ export function createMarqueeLoop({ band, track, onCopiesNeeded }) {
     // Zerado para o letreiro não herdar, ao voltar para a tela, o scroll
     // que passou enquanto ele estava fora.
     lastScroll = null;
-    upHold = 0;
-    upFreeze = 0;
+    activity = 0;
+    scrollDebt = 0;
   }
 
   // A faixa recebe o começo do gesto; o resto escuta a janela para que o

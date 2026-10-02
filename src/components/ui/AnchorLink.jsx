@@ -8,6 +8,12 @@ import { scrollToHash } from "../../motion/index.js";
  */
 export default function AnchorLink({ href, children, onNavigate, ...rest }) {
   const handleClick = (ev) => {
+    // Primeiro avisa quem hospeda, depois rola — e nunca o contrário.
+    // O menu do celular trava o scroll enquanto está aberto, e o Lenis
+    // ignora scrollTo enquanto está parado: na ordem inversa o painel
+    // fechava e a página não saía do lugar.
+    onNavigate?.();
+
     if (href?.startsWith("#")) {
       ev.preventDefault();
       scrollToHash(href);
@@ -15,7 +21,6 @@ export default function AnchorLink({ href, children, onNavigate, ...rest }) {
       // em vez de percorrer as seções uma por uma.
       window.history.replaceState(null, "", href);
     }
-    onNavigate?.();
   };
 
   return (
